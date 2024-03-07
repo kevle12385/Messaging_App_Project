@@ -34,29 +34,25 @@ export function AuthProvider({ children }) {
         verifyUser();
     }, []);
 
-
-    
-
-      const login =(email, password) => {
-  axios.post('/api/login', {
-    Email: email,
-    Password: password
-  }, {
-    withCredentials: true // Important: This is needed to include cookies in requests
-  })
-  .then(response => {
-    // Assuming the response includes accessToken and refreshToken
-    const { accessToken } = response.data;
-
-    // Set accessToken in a cookie
-    document.cookie = `accessToken=${accessToken};path=/;secure;SameSite=Strict;max-age=${15 * 60}`; // 15 minutes expiration
-
-    console.log(response.data.message); // "Login successful"
-  })
-  .catch(error => {
-    console.error("Login error", error.response.data);
-  });
-}
+    const login = (email, password) => {
+        return axios.post('/api/login', {
+          Email: email,
+          Password: password
+        }, {
+          withCredentials: true // Important: This is needed to include cookies in requests
+        })
+        .then(response => {
+          // Assuming the response includes accessToken and refreshToken
+          const { accessToken } = response.data;
+      
+          // Set accessToken in a cookie
+          document.cookie = `accessToken=${accessToken};path=/;secure;SameSite=Strict;max-age=${15 * 60}`; // 15 minutes expiration
+          
+          console.log(response.data.message); // "Login successful"
+          return response; // Return response for further chaining if needed
+        });
+      }
+      
 
 
 const clearCookie = (name, path = '/', domain = '') => {
@@ -76,6 +72,7 @@ const clearCookie = (name, path = '/', domain = '') => {
 
     const logout = async () => {
         clearCookie('accessToken');
+        window.location.reload();
     };
 
     if (isLoading) {

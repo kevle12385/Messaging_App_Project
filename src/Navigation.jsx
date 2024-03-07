@@ -8,7 +8,7 @@ function Navigation() {
 
   return (
     <nav>
-      <Link to="/">Dashboard</Link>
+      {/* <Link to="/">Dashboard</Link> */}
       {isLoggedIn ? (
         <button onClick={logout}>Logout</button>
       ) : (

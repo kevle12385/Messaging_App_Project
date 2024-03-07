@@ -1,36 +1,33 @@
-import React, { useState, useContext } from 'react'
-import { useNavigate } from 'react-router-dom'
-import axios from 'axios'
-import { useAuth } from '../AuthContext.jsx'; // Adjust the import path as needed
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../AuthContext'; // Adjust the import path as needed
 
-const LoginScreen = (props, URL) => {
+const LoginScreen = () => {
+  const { isLoggedIn, login} = useAuth();
+  const navigate = useNavigate();
 
-  const { isLoggedIn, login, logout } = useAuth();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [emailError, setEmailError] = useState('');
+  const [passwordError, setPasswordError] = useState('');
+
+  // Redirect the user if already logged in
+  useEffect(() => {
+    // This useEffect is dedicated to handling redirection based on the isLoggedIn state
+    if (isLoggedIn) {
+      navigate('/'); // Adjust this as needed, e.g., to '/dashboard' or any other route
+    }
+  }, [isLoggedIn, navigate]);
 
 
-
-
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [emailError, setEmailError] = useState('')
-  const [passwordError, setPasswordError] = useState('')
-
-  const navigate = useNavigate()
-
-
-  const onButtonClick2 = () => {
-    navigate('/signup');
-  }
-
+  
+  
   const onSubmit = async (e) => {
     e.preventDefault(); // Prevent default form submission behavior
-  
-    // Reset errors
     setEmailError('');
     setPasswordError('');
-  
-    // Validate email and password
-    if (email === '') {
+
+    if (!email) {
       setEmailError('Please enter your email');
       return;
     }
@@ -38,108 +35,58 @@ const LoginScreen = (props, URL) => {
       setEmailError('Please enter a valid email');
       return;
     }
-    if (password === '') {
-      setPasswordError('Please enter a password');
-      return;
-    }
     if (password.length < 8) {
       setPasswordError('The password must be 8 characters or longer');
       return;
     }
-  
-    // Attempt login
+
     try {
-      // Directly using login function from context
-      await login(email, password); // Assuming login takes email and password as arguments
-      navigate('/');
-    } catch (error) {
-      console.error('Login failed:', error);
-      if (error.response && error.response.status === 401) {
-        // Handle authentication-specific errors (e.g., wrong credentials)
-        setEmailError('Incorrect email or password');
-      } else {
-        // Handle other kinds of errors (network error, server error, etc.)
-        setEmailError('An error occurred. Please try again later.');
-      }
-    }
-  
-  };
-  
-  
-
-  
-
-
-  const onButtonClick = (e) => {
-    // Set initial error values to empty
-    setEmailError('')
-    setPasswordError('')
-  
-    // Check if the user has entered both fields correctly
-    if ('' === email) {
-      setEmailError('Please enter your email')
-      return
-    }
-  
-    if (!/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(email)) {
-      setEmailError('Please enter a valid email')
-      return
-    }
-  
-    if ('' === password) {
-      setPasswordError('Please enter a password')
-      return
-    }
-  
-    if (password.length < 7) {
-      setPasswordError('The password must be 8 characters or longer')
-      return
-    }
-  
-    // Authentication calls will be made here...
-    
-  }
-
- 
-  
-
-  
-  return (
-    <div className={'mainContainer'}>
-      <div className={'titleContainer'}>
-        <div>Login</div>
-      </div>
-      <br />
-      <form onSubmit={onSubmit}>
-      <div className={'inputContainer'}>
-        <input
-          value={email}
-          placeholder="Enter your email here"
-          onChange={(ev) => setEmail(ev.target.value)}
-          className={'inputBox'}
-        />
-        <label className="errorLabel">{emailError}</label>
-      </div>
-      <br />
-      <div className={'inputContainer'}>
-        <input
-          value={password}
-          placeholder="Enter your password here"
-          onChange={(ev) => setPassword(ev.target.value)}
-          className={'inputBox'}
-        />
-        <label className="errorLabel">{passwordError}</label>
-      </div>
-      <br />
-      <div className={'inputContainer'}>
-        <input className={'inputButton'} type="submit" onClick={onButtonClick} value={'Log in'} />
-      </div>
-      </form> 
-      <br/>
-      <input className={'inputButton'} type="button" onClick={onButtonClick2} value={'Sign up'}/>
-
-    </div>
-  )
+  await login(email, password); // This will now wait for the login to complete
+  window.location.reload(); // Refresh the page after login is successful
+} catch (error) {
+  console.error("Login error", error.response.data);
+  // Handle login failure
 }
 
-export default LoginScreen
+  };
+
+  if (isLoggedIn) {
+    return null; // or a loading indicator, etc.
+  }
+
+
+
+  return (
+    <div className={'mainContainer'}>
+      <h2>Login</h2>
+      <form onSubmit={onSubmit}>
+        <div className={'inputContainer'}>
+          <input
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="Enter your email"
+            className={'inputBox'}
+          />
+          <div className="errorLabel">{emailError}</div>
+        </div>
+        <div className={'inputContainer'}>
+          <input
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="Enter your password"
+            className={'inputBox'}
+          />
+          <div className="errorLabel">{passwordError}</div>
+        </div>
+        <div className={'inputContainer'}>
+          <button type="submit" className={'inputButton'}>Log in</button>
+        </div>
+      </form>
+      <button onClick={() => navigate('/signup')} className={'inputButton'}>Sign up</button>
+    </div>
+  );
+};
+
+export default LoginScreen;
