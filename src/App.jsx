@@ -26,9 +26,9 @@ function App() {
         <Routes>
           {/* Apply the PrivateRoute component */}
           <Route path="/" element={
-            <PrivateRoute>
+          
               <Dashboard />
-            </PrivateRoute>
+          
           } />
           <Route path="/signup" element={<SignUpScreen URL={URL} />} />
           <Route path="/login" element={<LoginScreen URL={URL} />} />
