@@ -14,24 +14,27 @@ export function AuthProvider({ children }) {
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
-        const verifyUser = async () => {
-          try {
-            const response = await axios.get('/api/verify', { withCredentials: true });
-            setIsLoggedIn(true);
-            // Optionally, set user details in state here if returned by the API
-          } catch (error) {
-            console.error("Verification error:", error);
-            setIsLoggedIn(false);
-            // Here you can handle different types of errors differently if needed
-            // For example, showing a message to the user in case of a network error
-          } finally {
-            setIsLoading(false); // Ensure loading state is updated in any case
-          }
+        const verifyUser = () => {
+            const name = 'accessToken'; // Specify the cookie name
+            let cookieValue = document.cookie
+              .split('; ')
+              .find(row => row.startsWith(name + '='))
+              ?.split('=')[1];
+            
+            if (cookieValue) {
+                // If the cookie exists, assume the user is logged in
+                setIsLoggedIn(true);
+            } else {
+                // If no cookie, assume the user is not logged in
+                setIsLoggedIn(false);
+            }
+            setIsLoading(false); // Mark loading as complete regardless of login status
         };
-      
+        
         verifyUser();
-      }, []);
-      
+    }, []);
+
+
     
 
       const login =(email, password) => {
