@@ -34,20 +34,27 @@ export function AuthProvider({ children }) {
       
     
 
-    const login = async (email, password) => {
-    try {
-        const response = await axios.post('/api/login', {
-            Email: email,
-            Password: password
-        }, { withCredentials: true });
+      const login =(email, password) => {
+  axios.post('/api/login', {
+    Email: email,
+    Password: password
+  }, {
+    withCredentials: true // Important: This is needed to include cookies in requests
+  })
+  .then(response => {
+    // Assuming the response includes accessToken and refreshToken
+    const { accessToken } = response.data;
 
-        setIsLoggedIn(true);
-        // Handle successful login here (e.g., redirecting the user or storing the login state)
-    } catch (error) {
-        console.error('Login failed:', error);
-        // Handle error here (e.g., displaying a login error message to the user)
-    }
-};
+    // Set accessToken in a cookie
+    document.cookie = `accessToken=${accessToken};path=/;secure;SameSite=Strict;max-age=${15 * 60}`; // 15 minutes expiration
+
+    console.log(response.data.message); // "Login successful"
+  })
+  .catch(error => {
+    console.error("Login error", error.response.data);
+  });
+}
+
 
     
 

@@ -35,7 +35,6 @@ function App() {
         </Routes>
         </AuthProvider>
       </BrowserRouter>
-      <div>{URL}</div>
     </>
   );
 }
