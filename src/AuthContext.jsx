@@ -59,15 +59,23 @@ export function AuthProvider({ children }) {
 }
 
 
-    
+const clearCookie = (name, path = '/', domain = '') => {
+    // Construct the base expiration string
+    let expiration = "Thu, 01 Jan 1970 00:00:00 GMT";
+    let cookieStr = `${name}=;expires=${expiration};path=${path}`;
+
+    // If a domain is provided, add it to the cookie string
+    if (domain) {
+        cookieStr += `;domain=${domain}`;
+    }
+
+    // Set the cookie to clear it
+    document.cookie = cookieStr;
+};
+
 
     const logout = async () => {
-        try {
-            await axios.post('/api/logout', {}, { withCredentials: true });
-            setIsLoggedIn(false);
-        } catch (error) {
-            console.error('Logout failed:', error);
-        }
+        clearCookie('accessToken');
     };
 
     if (isLoading) {
