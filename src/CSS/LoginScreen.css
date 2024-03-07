@@ -1,0 +1,50 @@
+.mainContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  margin-top: -230px;
+}
+
+.inputContainer {
+  margin-bottom: 30px; /* Increased from 20px for more space between inputs */
+}
+
+.inputBox {
+  width: 350px; /* Increased width */
+  padding: 15px; /* Increased padding */
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 18px; /* Increased font size */
+}
+
+.inputButton {
+  padding: 15px 20px; /* Increased padding */
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 18px; /* Increased font size */
+}
+
+.inputButton:hover {
+  background-color: #0056b3;
+}
+
+.errorLabel {
+  color: red;
+  font-size: 16px; /* Increased font size */
+}
+
+h2 {
+  color: #333;
+  font-size: 24px; /* Increased font size */
+}
+
+.buttonsContainer {
+  display: flex;
+  justify-content: space-around;
+  margin: 20px; /* Increased margin */
+}

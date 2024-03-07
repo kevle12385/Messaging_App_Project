@@ -1,7 +1,8 @@
 import React, { useState } from 'react'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
-
+import '../CSS/SignUpScreen.css'; // Adjust the path if your CSS file is located elsewhere
+import Navigation from './Navigation';
 
 
 function SignUpScreen({URL}) {
@@ -68,24 +69,27 @@ function SignUpScreen({URL}) {
 
   return (
   
-  <>
-   <div>Sign Up</div>
-   <br/>
+<>
+<Navigation />
+  <div className="signUpContainer">
+    <div className="signUpHeader">Sign Up</div>
     <form onSubmit={handleSubmit}>  
-    <div><input type='text' onChange={handleInputChange} placeholder="Full Name"/> </div>
-    <label className="errorLabel">{nameError}</label>
-    <br/>
-    <div><input type='text' onChange={(ev) => setEmail(ev.target.value)} placeholder="Email"/> </div>
-    <label className="errorLabel">{emailError}</label>
-    <br/>
-    <div>{URL}</div>
-    <input type='text' onChange={(ev2) => setPassword(ev2.target.value)} placeholder="Password"/> 
-    <label className="errorLabel">{passwordError}</label>
-    <br/>
-    <button onClick={onButtonClick}>Create Account</button>
-  </form>
-  </>
-  )
+      <div className="inputContainer">
+        <input type='text' onChange={handleInputChange} placeholder="Full Name"/>
+        <div className="errorLabel">{nameError}</div>
+      </div>
+      <div className="inputContainer">
+        <input type='email' onChange={(ev) => setEmail(ev.target.value)} placeholder="Email"/> 
+        <div className="errorLabel">{emailError}</div>
+      </div>
+      <div className="inputContainer">
+        <input type='password' onChange={(ev2) => setPassword(ev2.target.value)} placeholder="Password"/> 
+        <div className="errorLabel">{passwordError}</div>
+      </div>
+      <button type="submit" className="createAccountButton">Create Account</button>
+    </form>
+  </div>
+</>  )
 }
 
 export default SignUpScreen

@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../AuthContext'; // Adjust the import path as needed
+import '../CSS/LoginScreen.css'
+import Navigation from './Navigation';
 
 const LoginScreen = () => {
   const { isLoggedIn, login} = useAuth();
@@ -57,35 +59,39 @@ const LoginScreen = () => {
 
 
   return (
+    <>
+    <Navigation />
     <div className={'mainContainer'}>
-      <h2>Login</h2>
-      <form onSubmit={onSubmit}>
-        <div className={'inputContainer'}>
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="Enter your email"
-            className={'inputBox'}
-          />
-          <div className="errorLabel">{emailError}</div>
-        </div>
-        <div className={'inputContainer'}>
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder="Enter your password"
-            className={'inputBox'}
-          />
-          <div className="errorLabel">{passwordError}</div>
-        </div>
-        <div className={'inputContainer'}>
-          <button type="submit" className={'inputButton'}>Log in</button>
-        </div>
-      </form>
-      <button onClick={() => navigate('/signup')} className={'inputButton'}>Sign up</button>
-    </div>
+    <h2>Login</h2>
+    <form onSubmit={onSubmit}>
+      <div className={'inputContainer'}>
+        <input
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder="Enter your email"
+          className={'inputBox'}
+        />
+        <div className="errorLabel">{emailError}</div>
+      </div>
+      <div className={'inputContainer'}>
+        <input
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          placeholder="Enter your password"
+          className={'inputBox'}
+        />
+        <div className="errorLabel">{passwordError}</div>
+      </div>
+      {/* Buttons container */}
+      <div className={'buttonsContainer'}>
+        <button type="submit" className={'inputButton'}>Log in</button>
+        <button onClick={() => navigate('/signup')} className={'inputButton'}>Sign up</button>
+      </div>
+    </form>
+  </div>
+  </>
   );
 };
 

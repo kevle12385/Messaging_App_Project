@@ -1,0 +1,40 @@
+/* Reset margins and padding for body */
+body {
+    margin: 0;
+    padding: 0;
+    
+}
+
+.navbar {
+    
+    background-color: #007bff; /* Adjust the color to fit your design */
+    overflow: hidden;
+    display: flex;
+    justify-content: center; /* Center navbar links horizontally */
+    padding: 14px 16px;
+    border-radius: 20px;
+    width: 85%;
+    margin: auto; /* Centers the navbar horizontally */
+    align-items: center;
+}
+
+.navbar a {
+    float: left;
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+    font-size: 20px;
+}
+
+.navbar a:hover {
+    background-color: #0056b3; /* Darker shade for hover effect */
+}
+
+.Website_Name {
+    color: white;
+    font-size: 20px;
+    text-align: left;
+
+}
