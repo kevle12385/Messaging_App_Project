@@ -1,25 +1,42 @@
 import io from 'socket.io-client';
-import React from 'react';
-import { ReactDOM } from 'react';
-import React from "react";
 import ReactDOM from "react-dom";
 import { useEffect, useState } from "react";
 
 
+const socket = io("http://localhost:3001", {
+  transports: ["websocket", "polling"]
+  });
+
 function Chatroom() {
     const [users, setUsers] = useState([]);
     const [message, setMessage] = useState("");
-    const [messages, setMessages] = useState([]);
-  
+    const [messagRecieved, setMessageRecieved] = useState('');
 
-    const socket = io("http://localhost:3000", {
-        transports: ["websocket", "polling"]
-        });
-    
+        const sendMessage = () => {
+          socket.emit('send_message',  {message})
+     }
+ 
+     useEffect(() => {
+      socket.on("recieve_message", (data) => {
+        setMessageRecieved(data.message);
+      })
+     }, {socket})
+
      
-
   return (
-    <div>Chatroom</div>
+   
+    <>
+  
+    <div>
+      <input placeholder='Message...' onChange={(event) =>{
+        setMessage(event.target.value);
+      }}></input>
+      <button onClick={sendMessage}>Send message</button>
+      <h1>Message:</h1>
+      {messagRecieved}
+    </div>    
+    
+    </>
   )
 }
 

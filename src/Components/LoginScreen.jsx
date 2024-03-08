@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../AuthContext'; // Adjust the import path as needed
-import '../CSS/LoginScreen.css'
+import '../CSS/Navigation.css'
 import Navigation from './Navigation';
 
 const LoginScreen = () => {

@@ -42,12 +42,13 @@ export function AuthProvider({ children }) {
           withCredentials: true // Important: This is needed to include cookies in requests
         })
         .then(response => {
-          // Assuming the response includes accessToken and refreshToken
-          const { accessToken } = response.data;
+          // Assuming the response includes accessToken and Email
+          const { accessToken , Email} = response.data;
       
           // Set accessToken in a cookie
           document.cookie = `accessToken=${accessToken};path=/;secure;SameSite=Strict;max-age=${15 * 60}`; // 15 minutes expiration
-          
+          document.cookie = `Email=${Email};path=/;secure;SameSite=Strict;max-age=604800`; // 7 days expiration
+
           console.log(response.data.message); // "Login successful"
           return response; // Return response for further chaining if needed
         });

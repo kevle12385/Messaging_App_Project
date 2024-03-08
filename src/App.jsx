@@ -5,9 +5,12 @@ import LoginScreen from './Components/LoginScreen';
 import SignUpScreen from './Components/SignUpScreen';
 import axios from 'axios';
 import { AuthProvider } from './AuthContext';
-import Navigation from './Components/Navigation'; // Adjust path as needed
-import PrivateRoute from './PrivateRoute';
 import LandingPage from './Components/LandingPage';
+import ProtectedRoute from './ProtectedRoute.jsx'; // Import your protected route component
+
+
+
+
 function App() {
   const URL = import.meta.env.VITE_API_URL;
 
@@ -22,13 +25,16 @@ function App() {
     <BrowserRouter>
     <AuthProvider>
      
-        {/* <Navigation /> */}
-        
         <Routes>
           {/* Apply the PrivateRoute component */}
           {/* <Route path="/" element={
              <PrivateRoute><Dashboard /></PrivateRoute> 
           } /> */}
+              <Route path="/dashboard" element={
+              <ProtectedRoute>
+                <Dashboard />
+              </ProtectedRoute>
+            } />
         <Route path='/' element={<LandingPage/>}  />
           <Route path="/signup" element={<SignUpScreen URL={URL} />} />
           <Route path="/login" element={<LoginScreen URL={URL} />} />
