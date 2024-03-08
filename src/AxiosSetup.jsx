@@ -1,35 +1,51 @@
 import { useEffect } from 'react';
 import axios from 'axios';
-import { refreshAccessToken } from './AuthService'; // Adjust the path as necessary
+
+// Assuming refreshAccessToken is correctly implemented to handle the refresh logic
+import { refreshAccessToken } from './AuthService'; 
 
 const AxiosSetup = () => {
-    useEffect(() => {
-        const interceptor = axios.interceptors.response.use(
-            response => response,
-            async error => {
-                const originalRequest = error.config;
-                // Check if the error is due to an expired token
-                if (error.response.status === 401 && !originalRequest._retry) {
-                    originalRequest._retry = true;
-                    const newAccessToken = await refreshAccessToken();
-                    if (newAccessToken) {
-                        // Update the authorization header and retry the original request
-                        axios.defaults.headers.common['Authorization'] = `Bearer ${newAccessToken}`;
-                        originalRequest.headers['Authorization'] = `Bearer ${newAccessToken}`; // Update the original request as well
-                        return axios(originalRequest);
-                    }
-                }
-                return Promise.reject(error);
+  useEffect(() => {
+    const setupInterceptors = () => {
+      const interceptor = axios.interceptors.response.use(
+        response => response, // simply return the response for successful requests
+        async error => {
+          // Destructure for clarity
+          const { config, response: { status } } = error;
+
+          // Check for expired access token error response
+          if (status === 401 && !config._retry) {
+            config._retry = true; // mark this request as retried
+            try {
+              const newAccessToken = await refreshAccessToken(); // attempt to refresh token
+              
+              if (newAccessToken) {
+                // Update the authorization header and retry the original request
+                axios.defaults.headers.common['Authorization'] = `Bearer ${newAccessToken}`;
+                config.headers['Authorization'] = `Bearer ${newAccessToken}`;
+                return axios(config); // retry the original request with the new token
+              }
+            } catch (refreshError) {
+              console.error('Error refreshing access token:', refreshError);
+              // Implement further error handling, e.g., redirecting to login
+              return Promise.reject(refreshError); // Reject with the new error
             }
-        );
+          }
 
-        // Cleanup function to remove interceptor
-        return () => {
-            axios.interceptors.response.eject(interceptor);
-        };
-    }, []); // The empty array ensures this effect runs only once on mount
+          return Promise.reject(error); // For all other errors, reject the promise
+        }
+      );
 
-    return null; // This component does not render anything
+      return interceptor;
+    };
+
+    const interceptorId = setupInterceptors();
+
+    // Cleanup function to remove interceptor
+    return () => axios.interceptors.response.eject(interceptorId);
+  }, []); // The empty dependency array ensures this effect runs only once on mount
+
+  return null; // This component does not render anything
 };
 
 export default AxiosSetup;

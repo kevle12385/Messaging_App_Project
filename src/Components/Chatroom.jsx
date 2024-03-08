@@ -15,13 +15,17 @@ function Chatroom() {
         const sendMessage = () => {
           socket.emit('send_message',  {message})
      }
- 
      useEffect(() => {
       socket.on("recieve_message", (data) => {
         setMessageRecieved(data.message);
-      })
-     }, {socket})
-
+      });
+    
+      // Cleanup function to unsubscribe from the event when the component unmounts
+      return () => {
+        socket.off("recieve_message");
+      };
+    }, [socket]); // Passing `socket` in the dependency array
+    
      
   return (
    

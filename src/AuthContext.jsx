@@ -73,6 +73,8 @@ const clearCookie = (name, path = '/', domain = '') => {
 
     const logout = async () => {
         clearCookie('accessToken');
+        clearCookie('Email');
+
         window.location.reload();
     };
 

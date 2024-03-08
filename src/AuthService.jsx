@@ -2,24 +2,30 @@ import axios from 'axios';
 
 export const refreshAccessToken = async () => {
 
-
+    const getCookieValue = (name) => (
+        document.cookie.split('; ')
+          .find(row => row.startsWith(name + '='))
+          ?.split('=')[1]
+      );
+      
 const refreshAccessToken = async () => {
     try {
-        const response = await axios.post('/api/token', { // response is a json file of the accesstoke
-            Email: email,
-            Password: password
-          })
-
+        // Extract Email from cookies
+        const email = getCookieValue('Email'); // Assuming you have Email stored in a cookie
         
-        // Update the stored access token with the new one
-        localStorage.setItem('accessToken', response.data.accessToken);
+        if (!email) {
+          console.error('Email cookie is not found');
+          // Handle case where email is not found, e.g., navigate to login
+          return null;
+        }
+        const response = await axios.post('/api/token', { Email: email }, { withCredentials: true });
+        document.cookie = `accessToken=${response.data.accessToken};path=/;secure;SameSite=Strict;max-age=${15 * 60}`; // 15 minutes expiration
         return response.data.accessToken;
-    } catch (error) {
-        console.error('Error refreshing access token:', error);
-        // Handle errors, such as redirecting to the login page
-        navigate('/login');
-        return null;
-    }
-};
+        } catch (error) {
+            console.error('Error refreshing access token:', error);
+           
+            return null;
+          }
 
-};
+        }
+}
