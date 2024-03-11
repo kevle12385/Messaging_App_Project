@@ -7,7 +7,6 @@ import axios from 'axios';
 import { AuthProvider } from './AuthContext';
 import LandingPage from './Components/LandingPage';
 import ProtectedRoute from './ProtectedRoute.jsx'; // Import your protected route component
-import AxiosSetup from './AxiosSetup.jsx';
 
 
 
@@ -22,7 +21,7 @@ function App() {
 
   return (
     <>
-    <AxiosSetup />
+    
     <BrowserRouter>
     <AuthProvider>
      
