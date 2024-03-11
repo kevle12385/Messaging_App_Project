@@ -1,7 +1,9 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import axios from 'axios';
+import { refreshAccessToken } from './AuthService'; 
 
 const AuthContext = createContext({
+    
   isLoggedIn: false,
   login: () => {},
   logout: () => {},
@@ -14,25 +16,34 @@ export function AuthProvider({ children }) {
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
-        const verifyUser = () => {
-            const name = 'accessToken'; // Specify the cookie name
-            let cookieValue = document.cookie
-              .split('; ')
-              .find(row => row.startsWith(name + '='))
-              ?.split('=')[1];
-            
-            if (cookieValue) {
-                // If the cookie exists, assume the user is logged in
-                setIsLoggedIn(true);
+        const verifyUser = async () => {
+          const name = 'accessToken'; // Specify the cookie name
+          let cookieValue = document.cookie
+            .split('; ')
+            .find(row => row.startsWith(name + '='))
+            ?.split('=')[1];
+    
+          if (cookieValue) {
+            // If the cookie exists, assume the user is logged in
+            setIsLoggedIn(true);
+          } else {
+            // If no cookie, try to refresh the access token
+            const refreshed = await refreshAccessToken();
+            if (refreshed) {
+              setIsLoggedIn(true);
+              console.log('Token refreshed')
             } else {
-                // If no cookie, assume the user is not logged in
-                setIsLoggedIn(false);
+              setIsLoggedIn(false);
+              console.log('Token not refreshed')
+
             }
-            setIsLoading(false); // Mark loading as complete regardless of login status
+          }
+          setIsLoading(false); // Mark loading as complete regardless of login status
         };
-        
+    
         verifyUser();
-    }, []);
+      }, []);
+    
 
     const login = (email, password) => {
         return axios.post('/api/login', {
@@ -46,7 +57,7 @@ export function AuthProvider({ children }) {
           const { accessToken , Email} = response.data;
       
           // Set accessToken in a cookie
-          document.cookie = `accessToken=${accessToken};path=/;secure;SameSite=Strict;max-age=${15 * 60}`; // 15 minutes expiration
+          document.cookie = `accessToken=${accessToken};path=/;secure;SameSite=Strict;max-age=${1 * 60}`; // 15 minutes expiration
           document.cookie = `Email=${Email};path=/;secure;SameSite=Strict;max-age=604800`; // 7 days expiration
 
           console.log(response.data.message); // "Login successful"

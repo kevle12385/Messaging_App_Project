@@ -3,7 +3,7 @@ import '../CSS/LandingPage.css'
 import React from 'react';
 import { Link } from 'react-router-dom';
 import Chatroom from './Chatroom';
-
+import { refreshAccessToken } from '../AuthService'; 
 function LandingPage() {
   return (
     <div>
@@ -13,6 +13,7 @@ function LandingPage() {
         <Navigation />
         <h1>Welcome to Our Site!</h1>
         <p>This is a great place to connect with friends.</p>
+        <button onClick={() => refreshAccessToken()}>Create Cookie</button>
         <Chatroom />
       </div>
     </div>

@@ -1,33 +1,36 @@
 import { useEffect } from 'react';
 import axios from 'axios';
 
-// Assuming refreshAccessToken is correctly implemented to handle the refresh logic
-import { refreshAccessToken } from './AuthService'; 
+import { refreshAccessToken } from './AuthService';
 
 const AxiosSetup = () => {
   useEffect(() => {
     const setupInterceptors = () => {
+      console.log('Set up complete')
+
       const interceptor = axios.interceptors.response.use(
         response => response, // simply return the response for successful requests
         async error => {
-          // Destructure for clarity
           const { config, response: { status } } = error;
 
-          // Check for expired access token error response
           if (status === 401 && !config._retry) {
             config._retry = true; // mark this request as retried
             try {
-              const newAccessToken = await refreshAccessToken(); // attempt to refresh token
-              
-              if (newAccessToken) {
-                // Update the authorization header and retry the original request
-                axios.defaults.headers.common['Authorization'] = `Bearer ${newAccessToken}`;
-                config.headers['Authorization'] = `Bearer ${newAccessToken}`;
+              // Attempt to refresh token
+              await refreshAccessToken();
+              // After refreshing, extract the new access token from the cookie
+              const updatedAccessToken = document.cookie
+                .split('; ')
+                .find(row => row.startsWith('accessToken='))
+                ?.split('=')[1];
+              console.log('token created sucessfulty')
+              if (updatedAccessToken) {
+                // Update the authorization header with the new token from the cookie
+                config.headers['Authorization'] = `Bearer ${updatedAccessToken}`;
                 return axios(config); // retry the original request with the new token
               }
             } catch (refreshError) {
               console.error('Error refreshing access token:', refreshError);
-              // Implement further error handling, e.g., redirecting to login
               return Promise.reject(refreshError); // Reject with the new error
             }
           }
