@@ -30,16 +30,17 @@ function Chatroom() {
   return (
    
     <>
-  
+    <div></div>
     <div>
-      <input placeholder='Message...' onChange={(event) =>{
-        setMessage(event.target.value);
-      }}></input>
+      <br/>
+     
       <button onClick={sendMessage}>Send message</button>
       <h1>Message:</h1>
       {messagRecieved}
     </div>    
-    
+    <input className='inputMessageBar' placeholder='Message...' onChange={(event) =>{
+        setMessage(event.target.value);
+      }}></input>
     </>
   )
 }

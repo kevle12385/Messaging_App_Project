@@ -1,40 +1,35 @@
-/* Reset margins and padding for body */
-body {
-    margin: 0;
-    padding: 0;
+/* LandingPage.css */
+.content {
+    background-color: blue;
+    padding: 20px;
+    box-sizing: border-box;
+    overflow-y: scroll;
+    max-height: 90vh;
     
 }
 
-.navbar {
-    
-    background-color: #007bff; /* Adjust the color to fit your design */
-    overflow: hidden;
-    display: flex;
-    justify-content: center; /* Center navbar links horizontally */
-    padding: 14px 16px;
-    border-radius: 20px;
-    width: 85%;
-    margin: auto; /* Centers the navbar horizontally */
-    align-items: center;
-}
 
-.navbar a {
-    float: left;
-    display: block;
-    color: white;
-    text-align: center;
-    padding: 14px 16px;
-    text-decoration: none;
-    font-size: 20px;
-}
-
-.navbar a:hover {
-    background-color: #0056b3; /* Darker shade for hover effect */
-}
 
 .Website_Name {
     color: white;
     font-size: 20px;
     text-align: left;
+}
 
+
+.LandingPage {
+    background-color: blue;
+    padding: 0px;
+    box-sizing: border-box;
+    height: 100vh; /* Full viewport height */
+    margin: 0; /* Ensure no additional margin is applied */
+}
+
+
+html, body {
+    margin: 0;
+    padding: 0;
+    /* You might also want to set the height to ensure full coverage */
+    height: 100%;
+    overflow: hidden; /* Prevent scrolling on the body directly, if desired */
 }

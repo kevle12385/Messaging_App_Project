@@ -7,7 +7,7 @@ import axios from 'axios';
 import { AuthProvider } from './AuthContext';
 import LandingPage from './Components/LandingPage';
 import ProtectedRoute from './ProtectedRoute.jsx'; // Import your protected route component
-
+import Friends from './Components/Friends.jsx';
 
 
 function App() {
@@ -33,12 +33,15 @@ function App() {
               <Route path="/dashboard" element={
               <ProtectedRoute>
                 <Dashboard />
+                <Friends/>
               </ProtectedRoute>
             } />
         <Route path='/' element={<LandingPage/>}  />
           <Route path="/signup" element={<SignUpScreen URL={URL} />} />
           <Route path="/login" element={<LoginScreen URL={URL} />} />
           <Route path="/dashboard" element={<Dashboard URL={URL} />} />
+          <Route path="/friends" element={<Friends URL={URL} />} />
+          <Route path="/profile" element={<Friends URL={URL} />} />
 
         </Routes>
         </AuthProvider>

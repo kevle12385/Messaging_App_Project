@@ -1,0 +1,43 @@
+
+
+
+.container {
+    display: flex;
+    flex-direction: row;
+    height:100vh
+  }
+  
+.content {
+    background-color: blue;
+    flex: 1; /* Element can grow and shrink */
+    width: 50%; /* Base width */
+    max-width: 400px; /* Ensures element does not grow beyond 600px */
+    /* Add padding, margins as needed */
+    overflow-y: scroll; /* Adds a vertical scrollbar when necessary */
+    padding: 20px; /* Adds some space inside the container */
+    box-sizing: border-box; /* Includes padding in the height calculation */
+
+ 
+}
+  
+.chatroom {
+    background-color: red;
+    
+    flex: 1;
+    /* Add padding, margins as needed */
+  }
+  
+.dashboard_title{
+  display: flex;
+  box-sizing: border-box; /* Includes padding in the height calculation */
+  flex: 1; /* Element can grow and shrink */
+  gap: 200px; /* Adjust the value as needed */
+  padding: 0px;
+  width: 100%;
+
+}
+
+.newChatButton{
+  border-radius: 50px;
+}
+

@@ -5,6 +5,8 @@
   justify-content: center;
   min-height: 100vh;
   margin-top: -230px;
+    width: 100vw; /* Ensures it takes up the full width of the viewport */
+
 }
 
 .inputContainer {
@@ -47,4 +49,27 @@ h2 {
   display: flex;
   justify-content: space-around;
   margin: 20px; /* Increased margin */
+}
+
+.navbar {
+  background-color: #007bff;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  padding: 14px 16px;
+  width: 100%;
+  margin: auto;
+  align-items: center;
+}
+
+.navbar a {
+  color: white;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+  font-size: 20px;
+}
+
+.navbar a:hover {
+  background-color: #0056b3;
 }

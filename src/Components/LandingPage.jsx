@@ -8,11 +8,10 @@ function LandingPage() {
     <div>
      
       
-      <div className="content">
+      <div className="LandingPage">
         <Navigation />
         <h1>Welcome to Our Site!</h1>
         <p>This is a great place to connect with friends.</p>
-        <Chatroom />
       </div>
     </div>
   );
