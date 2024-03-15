@@ -1,0 +1,43 @@
+.container-friends {
+    display: flex;
+    justify-content: space-between; /* Spreads the sections evenly */
+    padding: 20px; /* Adjust as needed */
+    height: 60vh; 
+    
+  }
+  
+  .section-friends {
+    flex: 1; /* Each section takes equal width */
+    margin: 0 10px; /* Adds some space between sections */
+  }
+  
+  .Friends-container{
+    background-color: rgb(157, 188, 239);
+    height: 100%;
+  }
+
+  .FriendRequests-container{
+    background-color: aquamarine;
+    height: 100%;
+
+  }
+
+  .DiscoverFriends-container{
+  background-color: rgb(40, 118, 92);
+    height: 100%;
+
+  }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+  }
+  
+  .person-name {
+    font-size: 28px; /* Adjust the size as needed */
+  }
+  
+
+
+  

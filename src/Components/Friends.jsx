@@ -2,15 +2,19 @@ import React, {useState, useEffect} from 'react'
 import Navigation from './Navigation'
 import axios from 'axios' 
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../AuthContext.jsx'
+import '../CSS/Friends.css'
 
 function Friends() {
   const navigate = useNavigate();
+  const { setIsLoggedIn, isLoggedIn  } = useAuth();
 
   const [friends, setFriends] =  useState([]);
   const [userId, setUserId] =  useState('');
   const [personID, setPersonID] =  useState('');
-  const [email, setEmail] =  useState('');
   const [friendRequests, setFriendRequests] =  useState([]);
+  const [isLoading, setIsLoading] = useState(true); // Initially, data is loading
+  const [personIDToDelete, setPersonIDToDelete] = useState(true); // Initially, data is loading
 
 
   const fetchCookieEmail = () => {
@@ -35,19 +39,6 @@ function Friends() {
     }
   };
   
-  // const findFriendRequests = async () => {
-  //   try {
-  //     const userID = await fetchUserIdFromEmail();
-  //     const response = await axios.post('/api/findFriendRequests', {userID: userID})
-  //     setFriendRequests(response.data)
-  //     console.log(friendRequests)
-  //     const requestFromIds = response.data.map(request => request.RequestFrom);
-  //   console.log(requestFromIds); // Logs an array of 'RequestFrom' IDs
-
-  //   } catch (error) {
-
-  //   }
-  // }
 
   const onSubmitsendFriendRequest = async (event) => {
     event.preventDefault(); // Prevent form from submitting traditionally
@@ -62,7 +53,7 @@ function Friends() {
       return null; // Early return if Email is not found in cookies
     }
 
-    
+  
       console.log("userid" + userID)
 
       const response = await axios.post('/api/friends/sendRequest', {FriendID: personID, AdderID: userID});
@@ -76,38 +67,112 @@ function Friends() {
   }
   
 
-  const fetchFriends = (Email) => {
+  const fetchPeople = (Email) => {
     Email = fetchCookieEmail();
     axios.get(`/api/people?excludeEmail=${Email}`)
     .then(response => {
       setFriends(response.data);
-      console.log(friends)
     }) .catch(error => {
       console.error('There was an error fetching the names:', error);
     });
     
   }
 
-  useEffect(() => {
-    const email = fetchCookieEmail();
-    if (!email) {
-      navigate('/login');
-    } else {
-      fetchFriends();
-      showfriendRequests();
-    }
-  }, []);
+
+  const acceptFriendRequests = async (e) => {
+    e.preventDefault();
   
+  
+    try {
+      const userID = await fetchUserIdFromEmail(); 
+      const RequestFrom = personIDToDelete;
+      const response = await axios.post('/api/acceptFriendRequestDoc', {
+        RequestFrom: RequestFrom,
+        userID: userID,
+      });
+     
+      console.log(response.data);
+      const updatedFriendRequests = friendRequests.filter(request => request._id !== RequestFrom);
+      setFriendRequests(updatedFriendRequests);
+
+      if (response.data.acknowledged && response.data.deletedCount > 0) {
+        await showfriendRequests(); // Refresh the friend requests list
+      }
+    } catch (error) {
+      console.error('Error deleting friend request:', error);
+      alert('No Request Selected to Accept');
+
+    }
+  };
+
+  const deleteFriendRequests = async (e) => {
+    e.preventDefault();
+    try {
+      const userID = await fetchUserIdFromEmail(); 
+      const RequestFrom = personIDToDelete;
+  
+      const response = await axios.post('/api/deleteFriendRequestDoc', {
+        RequestFrom: RequestFrom,
+        userID: userID,
+      });
+  
+      console.log(response.data);
+      const updatedFriendRequests = friendRequests.filter(request => request._id !== RequestFrom);
+      setFriendRequests(updatedFriendRequests);
+
+      if (response.data.acknowledged && response.data.deletedCount > 0) {
+        await showfriendRequests(); // Refresh the friend requests list
+      }
+      if (response.data.acknowledged && response.data.deletedCount == 0) {
+        alert('No Request Selected to Decline');
+      }
+    } catch (error) {
+      console.error('Error deleting friend request:', error);
+      alert('No Request Selecte to Decline');
+
+    }
+  };
+  
+  
+    
+
+  useEffect(() => {
+    console.log(personIDToDelete); // Log the current state to verify it's being updated
+  }, [personIDToDelete]);
+  
+
+  useEffect(() => {
+    if (isLoggedIn) { 
+      async function loadData() {
+        try {
+          // Assuming fetchFriends and showfriendRequests are async and return Promises
+          await Promise.all([fetchPeople(), showfriendRequests()]);
+          setIsLoading(false); // Set loading to false after data fetching
+        } catch (error) {
+          console.error('Error loading data:', error);
+          setIsLoading(false); // Also set loading to false in case of error
+        }
+      }
+  
+      loadData();
+    } else {
+      const email = fetchCookieEmail();
+      if (email) {
+        setIsLoggedIn(true); // or update your auth context/state accordingly
+      } else {
+        navigate('/login');
+      }
+    }
+  }, [isLoggedIn]); // Depend on the authentication state
+
   
 const showfriendRequests = async () => {
-
  try {
   const userID = await fetchUserIdFromEmail();
 
   const response = await axios.post('api/enrichedFriendRequests', {userID: userID})
   setFriendRequests(response.data)
-  console.log(friendRequests)
-  console.log(friends);
+
 
 } catch (error) {
   console.error('There was an error fetching the friend requests:', error);
@@ -116,57 +181,68 @@ const showfriendRequests = async () => {
 }
 
 
-  return (
-<>
-<Navigation/>
-<div>
-
-</div>
-
-<h1>Friend Requests</h1>
-<h2>Add Friends:</h2>
-
-{friendRequests.map((person, index) => (
-  <label key={index}> {/* Consider using person._id as key if it's unique */}
-    <input 
-      type="radio" 
-      name="personName" 
-      value={person._id} 
-      onClick={() => setPersonID(person._id)} 
-    />
-    {person.requesterDetails?.name || 'Unknown'}<br/>
-  </label>
-))}
-
-<form>
-        
-
-<button>Accept</button>
-<button>Decline</button>
-
-</form>
-
-<h1>Discover People </h1>
-
-<form>
-{friends.map((person, index) => (
-            <label key={index}>
-              <input type="radio" 
-              name="personName" 
-              value={person._id} 
-              onClick={() => setPersonID(person._id)} />
-              {person.name}<br/>
-            </label>
-          ))}
-
-
-<button onClick={onSubmitsendFriendRequest}>Add Friend</button>
-
-</form>
-<button onClick={fetchUserIdFromEmail}>Test</button>
-<button onClick={showfriendRequests}>Super test</button>
-</>  
-  )
+if (isLoading) {
+  return <h1>Loading...</h1>; // Or any loading spinner component
 }
 
+return (
+<>
+  <Navigation/>
+  <div className="container-friends">
+    <div className="section-friends">
+      <div className='Friends-container'>
+        <h1>Friends</h1>
+        {/* Your friends list or related content goes here */}
+
+
+        
+      </div>
+    </div>
+      <div className="section-friends">
+        <div className='FriendRequests-container'>
+         <form>
+          <h1>Friend Requests</h1>
+          {friendRequests.map((person, index) => (
+            <label key={index}>
+              <input 
+                type="radio" 
+                name="personName" 
+                value={person.requesterDetails._id} 
+                onChange={() => setPersonIDToDelete(person.requesterDetails._id)}
+              />
+              {person.requesterDetails?.name || 'Unknown'}<br/>
+            </label>
+          ))}
+          {friendRequests && friendRequests.length > 0 ? (
+            <>
+              <button onClick={acceptFriendRequests}>Accept</button>
+              <button onClick={deleteFriendRequests}>Decline</button>
+            </>
+          ) : (
+            <div>None</div>
+          )}
+        </form>
+      </div>
+    </div>
+
+    <div className="section-friends">
+      <div className="DiscoverFriends-container">
+        <form>
+          <h1>Discover People</h1>
+          {friends.map((person, index) => (
+            <label key={index}>
+              <input type="radio" name="personName"   value={person._id} onClick={() => setPersonID(person._id)} />
+  <span className="person-name">{person.name}</span><br/>
+            </label>
+          ))}
+          <button onClick={onSubmitsendFriendRequest}>Add Friend</button>
+        </form>
+      </div>
+    </div>
+   
+  </div>
+</>
+
+  );
+}
 export default Friends

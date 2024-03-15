@@ -32,6 +32,8 @@ export function AuthProvider({ children }) {
             if (refreshed) {
               setIsLoggedIn(true);
               console.log('Token refreshed')
+              window.location.reload();
+
             } else {
               setIsLoggedIn(false);
               console.log('Token not refreshed')

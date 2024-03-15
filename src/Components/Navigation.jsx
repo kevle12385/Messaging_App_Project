@@ -10,6 +10,7 @@ function Navigation() {
   const { isLoggedIn, logout } = useAuth();
 
   return (
+
     <nav>
       
       <div className="navbar">
@@ -20,8 +21,8 @@ function Navigation() {
           <Link to="/dashboard" className="nav-item">Messages</Link>
           <Link to="/friends" className="nav-item">Friends</Link>
 
-          <Link>Profile</Link>
-          <LogoutButton className="nav-item" />
+          <Link className="nav-item">Profile</Link>
+          <LogoutButton className="nav-item logout-button" />
         </>
       )}
 

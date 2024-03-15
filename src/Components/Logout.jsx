@@ -18,8 +18,8 @@ function LogoutButton() {
 
     return (
     <>
-    <div className=''>
-    <button className='inputButton' onClick={handleLogout}>Logout</button>
+    <div className='logout'>
+    <button className='inputButton ' onClick={handleLogout}>Logout</button>
     </div>
    
     </>
