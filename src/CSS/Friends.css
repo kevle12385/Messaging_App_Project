@@ -23,9 +23,9 @@
   }
 
   .DiscoverFriends-container{
-  background-color: rgb(40, 118, 92);
+    background-color: rgb(40, 118, 92);
     height: 100%;
-
+    
   }
 
   html, body {
@@ -35,9 +35,42 @@
   }
   
   .person-name {
-    font-size: 28px; /* Adjust the size as needed */
+    font-size: 24px; /* Adjust the size as needed */
+    margin-left: 10px;
+  }
+
+  .friend, .friend-request, .friend-request-item {
+    display: flex;
+    justify-content: space-between; /* This spaces out the child elements */
+    align-items: center; /* Align items vertically in the center */
+    margin-right: 10px;
+ 
+
   }
   
+  
+
+    .button2 {
+      background-color: #151269; /* Bright red background */
+      color: white; /* White text color */
+      padding: 10px 20px; /* Vertical and horizontal padding */
+      font-family: "Poppins", sans-serif;
+      font-style: normal;
+      font-size: 15px; /* Text size */
+      border: none; /* No border */
+      border-radius: 5px; /* Rounded corners for a modern look */
+      cursor: pointer; /* Cursor indicates clickable item */
+      transition: opacity 0.3s ease; /* Smooth transition for hover effect */
+      outline: none; /* Remove the focus outline to keep the design clean */
+    }
+    
+    .button2:hover {
+      opacity: 0.8; /* Slightly fade the button on hover for interaction feedback */
+    }
+    
+    .button2:active {
+      transform: scale(0.98); /* Small feedback for click action */
+    }
 
 
   

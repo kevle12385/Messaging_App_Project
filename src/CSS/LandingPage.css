@@ -18,13 +18,21 @@
 
 
 .LandingPage {
-    background-color: blue;
     padding: 0px;
     box-sizing: border-box;
     height: 100vh; /* Full viewport height */
     margin: 0; /* Ensure no additional margin is applied */
+    background-color: #151269;
+
 }
 
+.landingPageContainer {
+    background-color: #aad6ec;
+    text-align: center; /* Centering text content inside the container */
+    margin: 0 auto; /* Centers the container horizontally */
+    height: 83%;
+
+  }
 
 html, body {
     margin: 0;
@@ -33,3 +41,30 @@ html, body {
     height: 100%;
     overflow: hidden; /* Prevent scrolling on the body directly, if desired */
 }
+
+.HomeTitle{
+    font-size: 70px;
+ 
+}
+
+.bottomOfPage {
+    font-size: 1.5rem; /* Adjusts the base font size for everything in the div */
+    text-align: center; /* Centering the content if needed */
+
+  }
+  
+  .bottomLinks {
+    margin-top: 15px;
+    padding: 10px 20px; /* Increases the button size */
+    font-size: 35px; /* Increased font size */
+    cursor: pointer; /* Changes the cursor to a pointer when hovering over the button */
+    color: aliceblue;
+      text-decoration: none; /* Removes underline from links */
+
+  }
+
+.paragraph{
+    font-size: 30px;
+
+}
+

@@ -9,7 +9,6 @@ import LandingPage from './Components/LandingPage';
 import ProtectedRoute from './ProtectedRoute.jsx'; // Import your protected route component
 import Friends from './Components/Friends.jsx';
 
-
 function App() {
   const URL = import.meta.env.VITE_API_URL;
 

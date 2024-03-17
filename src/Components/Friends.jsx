@@ -15,6 +15,7 @@ function Friends() {
   const [friendRequests, setFriendRequests] =  useState([]);
   const [isLoading, setIsLoading] = useState(true); // Initially, data is loading
   const [personIDToDelete, setPersonIDToDelete] = useState(true); // Initially, data is loading
+  const [friendList, setFriendList] =  useState([]);
 
 
   const fetchCookieEmail = () => {
@@ -40,8 +41,8 @@ function Friends() {
   };
   
 
-  const onSubmitsendFriendRequest = async (event) => {
-    event.preventDefault(); // Prevent form from submitting traditionally
+  const onSubmitsendFriendRequest = async (personID) => {
+
     try {
     const userID = await fetchUserIdFromEmail(); // Assuming fetchUserIdFromEmail is a function that returns the user ID
     if (!userID) {
@@ -59,7 +60,7 @@ function Friends() {
       const response = await axios.post('/api/friends/sendRequest', {FriendID: personID, AdderID: userID});
       // Handle response here if needed
     } catch (error) {
-      alert('There was an error making friend request');
+      alert('Friend Requst Already Made');
       console.log(personID)
       console.log("userid" + userID)
 
@@ -78,38 +79,60 @@ function Friends() {
     
   }
 
-
-  const acceptFriendRequests = async (e) => {
-    e.preventDefault();
+  const showFriends = async () => {
+    try {
+      const userID = await fetchUserIdFromEmail();
+      // Step 1: Fetch the list of friend IDs
+      let response = await axios.post('/api/showFriendList', { userID: userID });
+      const friendIDs = response.data.friends; // Assuming the endpoint returns an object with a 'friends' property that is an array of IDs
+      console.log(friendIDs)
+      // Step 2: Fetch detailed information for each friend
+      if (friendIDs && friendIDs.length > 0) {
+        response = await axios.post('/api/friendsDetails', { friends: friendIDs });
+        const friendDetails = response.data; // This should be the array of friend objects with detailed information
+        setFriendList(friendDetails); // Update your state with the detailed friend information
+        console.log(friendDetails)
+      } else {
+        setFriendList([]); // Handle the case where there are no friends
+      }
+    } catch (error) {
+      console.error('Error returning Friend List:', error);
+    }
+  };
   
+
+  const acceptFriendRequest = async (personId) => {
+    // Prevents the form from submitting traditionally, if this function is used in an `onClick` handler with a button inside a form
+    // e.preventDefault();
   
     try {
       const userID = await fetchUserIdFromEmail(); 
-      const RequestFrom = personIDToDelete;
+      const RequestFrom = personId; // Now directly using the passed personId
       const response = await axios.post('/api/acceptFriendRequestDoc', {
         RequestFrom: RequestFrom,
         userID: userID,
       });
-     
+  
       console.log(response.data);
-      const updatedFriendRequests = friendRequests.filter(request => request._id !== RequestFrom);
+      // Filter out the accepted request from the friendRequests state
+      const updatedFriendRequests = friendRequests.filter(request => request.requesterDetails._id !== RequestFrom);
       setFriendRequests(updatedFriendRequests);
-
+  
+      // Conditional based on your API's response structure
       if (response.data.acknowledged && response.data.deletedCount > 0) {
-        await showfriendRequests(); // Refresh the friend requests list
+        await showfriendRequests(); // Re-fetches and updates the friend requests list
       }
     } catch (error) {
-      console.error('Error deleting friend request:', error);
-      alert('No Request Selected to Accept');
-
+      console.error('Error accepting friend request:', error);
+      alert('There was an error accepting the friend request.');
     }
   };
+  
 
-  const deleteFriendRequests = async (e) => {
-    e.preventDefault();
+  const deleteFriendRequest = async (personId) => {
     try {
-      const userID = await fetchUserIdFromEmail(); 
-      const RequestFrom = personIDToDelete;
+      const userID = await fetchUserIdFromEmail();
+      const RequestFrom = personId;
   
       const response = await axios.post('/api/deleteFriendRequestDoc', {
         RequestFrom: RequestFrom,
@@ -117,24 +140,39 @@ function Friends() {
       });
   
       console.log(response.data);
-      const updatedFriendRequests = friendRequests.filter(request => request._id !== RequestFrom);
+      // This assumes each friend request is uniquely identified by the requester's _id in your friendRequests state array.
+      const updatedFriendRequests = friendRequests.filter(request => request.requesterDetails._id !== RequestFrom);
       setFriendRequests(updatedFriendRequests);
-
+  
       if (response.data.acknowledged && response.data.deletedCount > 0) {
-        await showfriendRequests(); // Refresh the friend requests list
-      }
-      if (response.data.acknowledged && response.data.deletedCount == 0) {
-        alert('No Request Selected to Decline');
+        await showfriendRequests(); // Optionally, refresh the friend requests list
+      } else if (response.data.acknowledged && response.data.deletedCount == 0) {
+        alert('The request was not found or had already been declined.');
       }
     } catch (error) {
       console.error('Error deleting friend request:', error);
-      alert('No Request Selecte to Decline');
-
+      alert('An error occurred while trying to decline the friend request.');
     }
   };
   
+  const deleteFriend = async (personId) => {
+    try {
+      const userID = await fetchUserIdFromEmail();
+      const friendID = personId;
+      const response = await axios.post('/api/friends/remove', {
+        friendID: friendID,
+        userID: userID,
+      });
+      console.log(response.data);
+      const updatedFriendList = friendList.filter(request => request._id !== friendID);
+      setFriendList(updatedFriendList);
+    } catch (error) {
+      console.error('Error deleting friend:', error);
+      alert('An error occurred while trying to delete a friend.');
+    }
+  }
   
-    
+  
 
   useEffect(() => {
     console.log(personIDToDelete); // Log the current state to verify it's being updated
@@ -146,7 +184,7 @@ function Friends() {
       async function loadData() {
         try {
           // Assuming fetchFriends and showfriendRequests are async and return Promises
-          await Promise.all([fetchPeople(), showfriendRequests()]);
+          await Promise.all([fetchPeople(), showfriendRequests(), showFriends()]);
           setIsLoading(false); // Set loading to false after data fetching
         } catch (error) {
           console.error('Error loading data:', error);
@@ -181,8 +219,15 @@ const showfriendRequests = async () => {
 }
 
 
+
+
 if (isLoading) {
-  return <h1>Loading...</h1>; // Or any loading spinner component
+
+  return (
+   <> 
+    <Navigation/>
+    <h1>Loading...</h1>;
+  </> )
 }
 
 return (
@@ -191,52 +236,47 @@ return (
   <div className="container-friends">
     <div className="section-friends">
       <div className='Friends-container'>
-        <h1>Friends</h1>
-        {/* Your friends list or related content goes here */}
+        <h1 className='main_item'>Friends</h1>
 
+      
+{friendList.map((person) => (
+  <div key={person._id} className="friend">
+    <span className="person-name">{person?.name || 'Unknown'}</span>
+    <button onClick={() => deleteFriend(person._id)} className="button2">Delete</button>   
+  </div>
+))}
 
-        
       </div>
     </div>
       <div className="section-friends">
         <div className='FriendRequests-container'>
-         <form>
-          <h1>Friend Requests</h1>
-          {friendRequests.map((person, index) => (
-            <label key={index}>
-              <input 
-                type="radio" 
-                name="personName" 
-                value={person.requesterDetails._id} 
-                onChange={() => setPersonIDToDelete(person.requesterDetails._id)}
-              />
-              {person.requesterDetails?.name || 'Unknown'}<br/>
-            </label>
-          ))}
-          {friendRequests && friendRequests.length > 0 ? (
-            <>
-              <button onClick={acceptFriendRequests}>Accept</button>
-              <button onClick={deleteFriendRequests}>Decline</button>
-            </>
-          ) : (
-            <div>None</div>
-          )}
-        </form>
+        <div className='FriendRequests-container'>
+  <h1 className='main_item'>Friend Requests</h1>
+  {friendRequests.map((person, index) => (
+    <div key={index} className="friend-request">
+      <span className="person-name">{person.requesterDetails?.name || 'Unknown'}</span>
+      <button onClick={() => acceptFriendRequest(person.requesterDetails._id)} className="button2">Accept</button>
+      <button onClick={() => deleteFriendRequest(person.requesterDetails._id)} className="button2">Decline</button>
+    </div>
+  ))}
+  {friendRequests.length === 0 && (
+    <span className="person-name">You're all caught up! Why not invite your friends to join!</span>
+  )}
+</div>
+
       </div>
     </div>
 
     <div className="section-friends">
       <div className="DiscoverFriends-container">
-        <form>
-          <h1>Discover People</h1>
-          {friends.map((person, index) => (
-            <label key={index}>
-              <input type="radio" name="personName"   value={person._id} onClick={() => setPersonID(person._id)} />
-  <span className="person-name">{person.name}</span><br/>
-            </label>
-          ))}
-          <button onClick={onSubmitsendFriendRequest}>Add Friend</button>
-        </form>
+      <h1 className='main_item'>Discover People</h1>
+      
+  {friends.map((person, index) => (
+    <div key={index} className="friend-request-item">
+      <span className="person-name">{person.name}</span>
+      <button type="button" onClick={() => onSubmitsendFriendRequest(person._id)} className="button2">Add Friend</button><br/>
+    </div>
+  ))}
       </div>
     </div>
    

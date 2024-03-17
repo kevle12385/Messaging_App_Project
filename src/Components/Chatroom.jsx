@@ -1,6 +1,7 @@
 import io from 'socket.io-client';
 import ReactDOM from "react-dom";
 import { useEffect, useState } from "react";
+import('../CSS/ChatApplication.css')
 
 
 const socket = io("http://localhost:3001", {
@@ -34,13 +35,16 @@ function Chatroom() {
     <div>
       <br/>
      
-      <button onClick={sendMessage}>Send message</button>
       <h1>Message:</h1>
       {messagRecieved}
     </div>    
-    <input className='inputMessageBar' placeholder='Message...' onChange={(event) =>{
-        setMessage(event.target.value);
-      }}></input>
+    
+    <div className='textBar'>
+  <input className="textInput" placeholder='Message...' onChange={(event) =>{
+      setMessage(event.target.value); }} />
+  <button className="button3" onClick={sendMessage}>Send message</button>
+</div>
+
     </>
   )
 }

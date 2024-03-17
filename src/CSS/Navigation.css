@@ -1,5 +1,5 @@
 .mainContainer {
-  border:2px solid #007BFF; /* Change the color as needed */
+  border:2px solid 	#151269; /* Change the color as needed */
   background-color: rgba(255, 255, 255, 0.5); /* Semi-transparent white */
   padding: 20px;
   width: fit-content; /* Adjust based on your layout needs */
@@ -19,16 +19,19 @@
   border: 1px solid #ccc;
   border-radius: 5px;
   font-size: 18px; /* Increased font size */
+  
 }
 
 .inputButton {
   padding: 15px 20px; /* Increased padding */
-  background-color: #007bff;
+  background-color: 	#151269;
   color: white;
   border: none;
   border-radius: 5px;
   cursor: pointer;
-  font-size: 18px; /* Increased font size */
+  font-size: 20px;
+  font-family: "Poppins", sans-serif;
+    font-style: normal;
 }
 
 .inputButton:hover {
@@ -52,7 +55,7 @@ h2 {
 }
 
 .navbar {
-  background-color: #007bff;
+  background-color:	#151269;
   overflow: hidden;
   display: flex;
   justify-content: center;

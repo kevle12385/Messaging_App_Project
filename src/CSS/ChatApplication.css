@@ -8,10 +8,10 @@
   }
   
 .content {
-    background-color: blue;
+    background-color: #e6f2ff; /* Replace #f0f0f0 with the color you want */
     flex: 1; /* Element can grow and shrink */
     width: 50%; /* Base width */
-    max-width: 400px; /* Ensures element does not grow beyond 600px */
+    max-width: 450px; /* Ensures element does not grow beyond 600px */
     /* Add padding, margins as needed */
     overflow-y: scroll; /* Adds a vertical scrollbar when necessary */
     padding: 20px; /* Adds some space inside the container */
@@ -21,7 +21,6 @@
 }
   
 .chatroom {
-    background-color: red;
     
     flex: 1;
     /* Add padding, margins as needed */
@@ -37,7 +36,68 @@
 
 }
 
-.newChatButton{
-  border-radius: 50px;
+
+.button2 {
+  background-color: #151269; /* Bright red background */
+  color: white; /* White text color */
+  padding: 10px 20px; /* Vertical and horizontal padding */
+  font-family: "Poppins", sans-serif;
+  font-style: normal;
+  font-size: 15px; /* Text size */
+  border: none; /* No border */
+  border-radius: 5px; /* Rounded corners for a modern look */
+  cursor: pointer; /* Cursor indicates clickable item */
+  transition: opacity 0.3s ease; /* Smooth transition for hover effect */
+  outline: none; /* Remove the focus outline to keep the design clean */
 }
 
+.button2:hover {
+  opacity: 0.8; /* Slightly fade the button on hover for interaction feedback */
+}
+
+.button2:active {
+  transform: scale(0.98); /* Small feedback for click action */
+}
+
+/* Styling the container */
+/* Adjustments to the textBar container */
+.textBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px;
+  margin-top: 55%;
+}
+
+/* New styles for the text input */
+.textInput {
+  flex-grow: 1; /* Allows the text input to fill the space */
+  padding: 10px 15px; /* Slightly less padding to match button height */
+  margin-right: 10px; /* Ensures some space between the input and the button */
+  font-size: 25px;
+  border: 1px solid #151269; /* Lighter, more subtle border */
+  border-radius: 5px;
+  outline: none;
+}
+
+/* Ensure the button doesn't grow unnecessarily */
+.button3 {
+  background-color: #151269; /* Bright red background */
+  color: white; /* White text color */
+  font-family: "Poppins", sans-serif;
+  font-style: normal;
+  padding: 10px 20px;
+  white-space: nowrap; /* Prevents the button text from wrapping */
+  font-size: 20px;
+
+}
+
+/* Focus styles for text input */
+.textInput:focus {
+  border-color: #007bff; /* Blue border to match focus state */
+}
+
+/* (Optional) Hover effect for the text input for consistency */
+.textInput:hover {
+  border-color: #151269;
+}

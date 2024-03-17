@@ -19,7 +19,7 @@ function LogoutButton() {
     return (
     <>
     <div className='logout'>
-    <button className='inputButton ' onClick={handleLogout}>Logout</button>
+    <button className='inputButton' onClick={handleLogout}>Logout</button>
     </div>
    
     </>

@@ -40,10 +40,10 @@ function Dashboard() {
         <div className="content">
           <div className='dashboard_title'>         
              <h1>Chats</h1>
-             <button className='newChatButton'>Create New Chat</button>
+             <button className="button2">Create New Chat</button>
           </div>
           <h2>Friends:</h2>
-          <button><h3>Create New Chat:</h3></button>
+          <button className="button2"><h3>Create New Chat:</h3></button>
         
           <h1>Messages:</h1>
 
