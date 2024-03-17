@@ -37,10 +37,11 @@
 }
 
 
-.button2 {
-  background-color: #151269; /* Bright red background */
+.button1 {
+  background-color: #151269; /* Dark blue background, not bright red */
   color: white; /* White text color */
-  padding: 10px 20px; /* Vertical and horizontal padding */
+  padding: 0px 10px;
+
   font-family: "Poppins", sans-serif;
   font-style: normal;
   font-size: 15px; /* Text size */
@@ -51,23 +52,45 @@
   outline: none; /* Remove the focus outline to keep the design clean */
 }
 
-.button2:hover {
+.button0 {
+  background-color: #151269; /* Dark blue background, not bright red */
+  color: white; /* White text color */
+  padding: 0px 10px;
+  font-family: "Poppins", sans-serif;
+  font-style: normal;
+  font-size: 15px; /* Text size */
+  border: none; /* No border */
+  border-radius: 5px; /* Rounded corners for a modern look */
+  cursor: pointer; /* Cursor indicates clickable item */
+  transition: opacity 0.3s ease; /* Smooth transition for hover effect */
+  outline: none; /* Remove the focus outline to keep the design clean */
+  min-width: 100px; /* Adjust as needed to fit your button text */
+}
+
+
+.button1:hover, .button2:hover, .button3:hover {
   opacity: 0.8; /* Slightly fade the button on hover for interaction feedback */
 }
 
-.button2:active {
+.button1:active, .button1:active, .button3:active {
+  
   transform: scale(0.98); /* Small feedback for click action */
 }
 
-/* Styling the container */
-/* Adjustments to the textBar container */
 .textBar {
+  position: absolute; /* Positioned absolutely within its nearest positioned ancestor */
+  bottom: 0; /* Aligns the textBar at the bottom edge of its parent */
+  left: 450px; /* Aligns the textBar to the left edge of its parent */
+  right: 0; /* Ensures the textBar spans the full width of its parent */
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 10px;
-  margin-top: 55%;
+  box-sizing: border-box; /* Ensures padding is included in the width calculation */
 }
+
+
+
 
 /* New styles for the text input */
 .textInput {
@@ -89,8 +112,10 @@
   padding: 10px 20px;
   white-space: nowrap; /* Prevents the button text from wrapping */
   font-size: 20px;
-
 }
+
+
+
 
 /* Focus styles for text input */
 .textInput:focus {
@@ -100,4 +125,30 @@
 /* (Optional) Hover effect for the text input for consistency */
 .textInput:hover {
   border-color: #151269;
+}
+
+.friend1 {
+  border-width: 2px; /* Width of the border */
+  border-style: solid; /* Style of the border */
+  border-radius: 10px;
+  border-color: #151269; /* Color of the border */
+  margin-top: 10px;
+
+}
+
+
+.message-Container{
+  
+
+
+}
+
+.friend1 {
+  cursor: pointer; /* Optional: Changes the cursor to indicate clickability */
+  padding: 10px;
+  margin: 5px;
+}
+
+.highlight {
+  background-color: #aad6ec; /* Change as needed */
 }

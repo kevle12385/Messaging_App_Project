@@ -14,6 +14,30 @@ export function AuthProvider({ children }) {
 
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
+    const [currentUser, setCurrentUser] = useState(null);
+    const [currentUserID, setCurrentUserID] = useState(null);
+
+    const fetchCookieEmail = () => {
+      if (!document.cookie) return null; // Early return if `document.cookie` is undefined or empty
+    
+      const cookies = document.cookie.split('; ');
+      const emailCookie = cookies.find(cookie => cookie.startsWith('Email='));
+      return emailCookie ? decodeURIComponent(emailCookie.split('=')[1]) : null;
+    };
+
+    const fetchUserInfo = async () => {
+      const Email = await fetchCookieEmail();
+      try {
+        const response = await axios.post('/api/findUserByEmail', {Email})
+        console.log(response.data)
+        setCurrentUserID(response.data._id)
+        setCurrentUser(response.data.name)
+      } catch (error) {
+        console.log('Error finding User Info',  error)
+      }
+    }
+
+
 
     useEffect(() => {
         const verifyUser = async () => {
@@ -44,6 +68,7 @@ export function AuthProvider({ children }) {
         };
     
         verifyUser();
+        fetchUserInfo();
       }, []);
     
 
@@ -67,7 +92,6 @@ export function AuthProvider({ children }) {
         });
       }
       
-
 
 const clearCookie = (name, path = '/', domain = '') => {
     // Construct the base expiration string
@@ -96,7 +120,7 @@ const clearCookie = (name, path = '/', domain = '') => {
     }
 
     return (
-        <AuthContext.Provider value={{ isLoggedIn, login, logout }}>
+        <AuthContext.Provider value={{ isLoggedIn, login, logout, currentUserID, currentUser  }}>
             {children}
         </AuthContext.Provider>
     );

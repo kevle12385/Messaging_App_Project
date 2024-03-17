@@ -34,7 +34,7 @@ function Chatroom() {
     <div></div>
     <div>
       <br/>
-     
+    <div className='message-Container'>
       <h1>Message:</h1>
       {messagRecieved}
     </div>    
@@ -43,8 +43,8 @@ function Chatroom() {
   <input className="textInput" placeholder='Message...' onChange={(event) =>{
       setMessage(event.target.value); }} />
   <button className="button3" onClick={sendMessage}>Send message</button>
+  </div>
 </div>
-
     </>
   )
 }
