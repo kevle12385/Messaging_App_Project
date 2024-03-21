@@ -2,16 +2,20 @@ import io from 'socket.io-client';
 import ReactDOM from "react-dom";
 import { useEffect, useState } from "react";
 import('../CSS/ChatApplication.css')
+import axios from 'axios';
+import { useAuth } from '../AuthContext.jsx'
 
 
 const socket = io("http://localhost:3001", {
   transports: ["websocket", "polling"]
   });
 
-function Chatroom() {
+function Chatroom({selectedId, foundMessages}) {
     const [users, setUsers] = useState([]);
     const [message, setMessage] = useState("");
     const [messagRecieved, setMessageRecieved] = useState('');
+    const { setIsLoggedIn, isLoggedIn, currentUserID, currentUser } = useAuth();
+    const [chatRoomFound, setChatRoomFound] = useState([]);
 
         const sendMessage = () => {
           socket.emit('send_message',  {message})
@@ -28,6 +32,31 @@ function Chatroom() {
     }, [socket]); // Passing `socket` in the dependency array
     
      
+    const displayChat = async () => {
+      try {
+        const response = await axios.post('/api/findChatRoom', {userId: currentUserID, friendID: selectedId})
+        setChatRoomFound(response.data)
+        console.log(chatRoomFound);
+      } catch (error) {
+        
+      }
+    }
+
+
+
+    useEffect(() => {
+      if (isLoggedIn) {
+        displayChat();
+      }
+    }, [isLoggedIn]); // Depend on isLoggedIn state
+    
+
+
+
+
+
+
+
   return (
    
     <>
@@ -38,7 +67,9 @@ function Chatroom() {
       <h1>Message:</h1>
       {messagRecieved}
     </div>    
-    
+    <div>{currentUserID}</div>
+    <div>{selectedId}</div>
+    <div>{foundMessages}</div>    
     <div className='textBar'>
   <input className="textInput" placeholder='Message...' onChange={(event) =>{
       setMessage(event.target.value); }} />
@@ -49,4 +80,4 @@ function Chatroom() {
   )
 }
 
-export default Chatroom
+export default Chatroom;

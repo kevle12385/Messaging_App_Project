@@ -152,3 +152,16 @@
 .highlight {
   background-color: #aad6ec; /* Change as needed */
 }
+
+
+.chatItem {
+  cursor: pointer;
+  padding: 10px;
+  margin: 5px;
+  border: 1px solid #ddd;
+}
+
+.chatItemSelected {
+  background-color: #f0f0f0;
+  border: 2px solid blue;
+}

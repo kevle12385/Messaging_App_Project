@@ -18,11 +18,31 @@ function Dashboard() {
   const [chatNames, setChatNames] = useState([]);
   const [chatRooms, setChatRooms] =  useState([]);
   const [chatUpdateCount, setChatUpdateCount] = useState(0);
+  const [selectedChatId, setSelectedChatId] = useState(null);
+  const [selectedId, setSelectedId] = useState(null);
+  const [foundMessages, setFoundMessages] = useState([]);
 
-  function selectPerson(id) {
-    setSelectedPersonId(id);
-    console.log(selectedPersonId)
-  }
+  
+
+  
+
+  const handleSelect = (_id) => {
+    // Update the selected room ID
+    setSelectedId(_id);
+  
+    // Find the chat room by _id and set its messages to the state
+    const selectedRoom = chatNames.find(room => room._id === _id);
+    if (selectedRoom) {
+      setFoundMessages(selectedRoom.messages);
+      console.log(selectedRoom)
+    } else {
+      // Handle case where no matching room is found
+      setFoundMessages([]);
+    }
+  };
+  
+
+                                      
   
 
   const showFriends = async () => {
@@ -87,26 +107,34 @@ function Dashboard() {
   };
   
 
-     const findChatNames =  () => {
-      // Check if chatRooms.chatRooms is defined and is an array
-      if (Array.isArray(chatRooms?.chatRooms)) {
-        const names = chatRooms.chatRooms.map(room => {
-          // Check if the current user's name matches the first name in the names array of the room
-          if (room.names[0] === currentUser) {
-            // If it matches, and there's another name, return that name, otherwise, return the first name
-            return room.names[1] ?? room.names[0];
-          } else {
-            // If it doesn't match, return the first name
-            return room.names[0];
-          }
-        });
-        // Update the state with the names found
-        setChatNames(names);
-      } else {
-        // If chatRooms.chatRooms is not an array, set chatNames to an empty array or any other default value
-        setChatNames([]);
+  const findChatNames = () => {
+    if (Array.isArray(chatRooms?.chatRooms)) {
+      const chatData = chatRooms.chatRooms.map(room => {
+        const name = room.names[0] === currentUser
+          ? room.names[1] ?? room.names[0]
+          : room.names[0];
+  
+        // Simply return the name, _id, and messages for now
+        return { name, _id: room._id, messages: room.messages };
+      });
+  
+      // Update the chat names based on the mapped data
+      setChatNames(chatData);
+  
+      // Find and set messages for the selected room separately
+     
+      const selectedRoom = chatData.find(room => room._id === selectedRoomId);
+      if (selectedRoom) {
+        setChatMessages(selectedRoom.messages);
       }
-    };
+    } else {
+      // Handle the case where there are no chat rooms
+      setChatNames([]);
+      setChatMessages([]); // Ensure chat messages are cleared if no rooms are found
+    }
+  };
+  
+  
     
     
     
@@ -162,44 +190,36 @@ function Dashboard() {
         <div className="content">
           <div className='dashboard_title'>         
              <h1>Chats</h1> 
-  
+             <CreateChatModal className='createChatButton'/>
           </div>
           <button >test </button>
-          {isLoading ? (
+          <div>
+      {isLoading ? (
         <div>Loading chat rooms...</div>
       ) : (
-
-        chatNames.map((name, index) => (
-          <div key={index}>{name}</div>
-
+        chatNames.map(({ _id, name }) => (
+          <div
+            key={_id}
+            onClick={() => handleSelect(_id)}
+            className={`chatItem ${selectedId === _id ? 'chatItemSelected' : ''}`}
+          >
+            {name}
+          </div>
         ))
       )}
-          <CreateChatModal/>
+    </div>
+
+          
           <div>
   </div>
         
 
         </div>
         <div className="chatroom">
-          <Chatroom/>
-          {isLoading ? (
-        <div>Loading chat rooms...</div>
-      ) : (
-        <div>{chatRooms.chatRooms[0].names[0]}</div>
+          <Chatroom selectedId={selectedId} foundMessages={foundMessages}/>
         
-      )}
-      {isLoading ? (
-        <div>Loading chat rooms...</div>
-      ) : (
-
-        chatNames.map((name, index) => (
-          <div key={index}>{name}</div>
-
-        ))
-      )}
-        <button onClick={() => {
-          console.log(chatRooms.chatRooms[0].names[0])
-        }}>print name</button>
+      
+       
         </div>
       </div>
 
