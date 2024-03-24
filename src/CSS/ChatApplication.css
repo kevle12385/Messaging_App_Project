@@ -163,25 +163,24 @@
   width: 100%; 
   margin: 0; /* Example: Removing margin */
   padding: 0; /* Example: Removing padding */
+  align-items: flex-start; /* Default alignment to the start (left) */
+
 }
 
 .sender, .receiver {
-  /* Common styles */
   padding: 10px;
   border-radius: 20px;
-  margin: 10px 0; /* Adjusted for better vertical spacing */
-  max-width: 100%; /* Optional: max width for messages */
-    margin-right: 10px; /* Smaller margin for narrow screens */
-    margin-left: 10px; /* Adjusted for consistency */
-  
+  margin:  10px; /* Horizontal margin */
+  display: inline-block; /* Makes the div behave like an inline element around the content */
+  word-wrap: break-word; /* Ensures long words do not overflow */
 }
 
 .sender {
-  align-self: flex-end; /* Align sender messages to the right */
   background-color: #c6f8dd;
+  margin-left: auto; /* Pushes sender messages to the right */
 }
 
 .receiver {
-  align-self: flex-start; /* Align receiver messages to the left */
   background-color: #ffffff;
+  margin-right: auto; /* Pushes receiver messages to the left */
 }

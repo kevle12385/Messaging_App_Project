@@ -33,12 +33,12 @@ function Dashboard() {
     // Find the chat room by _id and set its messages to the state
     const selectedRoom = chatNames.find(room => room._id === _id);
     if (selectedRoom) {
+      // This sets foundMessages to be the array of message objects
       setFoundMessages(selectedRoom.messages);
-      console.log(selectedRoom)
     } else {
-      // Handle case where no matching room is found
       setFoundMessages([]);
     }
+  
   };
   
 
