@@ -2,38 +2,32 @@
 
 
 .container {
-    display: flex;
-    flex-direction: row;
-    height:100vh
-  }
+  display: flex;
+  flex-direction: row;
+  height: 100vh;
+  width: 100%;
+}
   
 .content {
     background-color: #e6f2ff; /* Replace #f0f0f0 with the color you want */
     flex: 1; /* Element can grow and shrink */
-    width: 50%; /* Base width */
-    max-width: 450px; /* Ensures element does not grow beyond 600px */
-    /* Add padding, margins as needed */
-    overflow-y: scroll; /* Adds a vertical scrollbar when necessary */
     padding: 20px; /* Adds some space inside the container */
     box-sizing: border-box; /* Includes padding in the height calculation */
 
- 
-}
-  
-.chatroom {
-    
-    flex: 1;
-    /* Add padding, margins as needed */
   }
   
-.dashboard_title{
-  display: flex;
-  box-sizing: border-box; /* Includes padding in the height calculation */
-  flex: 1; /* Element can grow and shrink */
-  gap: 200px; /* Adjust the value as needed */
-  padding: 0px;
-  width: 100%;
+  .chatroom_Component{
+    width: 80%;
 
+  }
+
+
+
+.dashboard_title {
+  display: flex; /* Aligns children of .dashboard_title side-by-side */
+  align-items: center; /* Vertically centers the items in the container */
+  justify-content: space-between; /* Spreads the children across the container's main axis */
+  
 }
 
 
@@ -44,7 +38,7 @@
 
   font-family: "Poppins", sans-serif;
   font-style: normal;
-  font-size: 15px; /* Text size */
+  font-size: 20px; /* Text size */
   border: none; /* No border */
   border-radius: 5px; /* Rounded corners for a modern look */
   cursor: pointer; /* Cursor indicates clickable item */
@@ -77,17 +71,7 @@
   transform: scale(0.98); /* Small feedback for click action */
 }
 
-.textBar {
-  position: absolute; /* Positioned absolutely within its nearest positioned ancestor */
-  bottom: 0; /* Aligns the textBar at the bottom edge of its parent */
-  left: 450px; /* Aligns the textBar to the left edge of its parent */
-  right: 0; /* Ensures the textBar spans the full width of its parent */
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 10px;
-  box-sizing: border-box; /* Ensures padding is included in the width calculation */
-}
+
 
 
 
@@ -115,7 +99,17 @@
 }
 
 
-
+.textBar {
+  position: absolute;
+  bottom: 0;
+  right: 0; /* Anchors the textBar to the right edge of its container */
+  width: 80%; /* Sets the width of the textBar */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px;
+  box-sizing: border-box;
+}
 
 /* Focus styles for text input */
 .textInput:focus {
@@ -137,11 +131,6 @@
 }
 
 
-.message-Container{
-  
-
-
-}
 
 .friend1 {
   cursor: pointer; /* Optional: Changes the cursor to indicate clickability */
@@ -158,10 +147,41 @@
   cursor: pointer;
   padding: 10px;
   margin: 5px;
-  border: 1px solid #ddd;
+  border: 1px solid #af7e7e;
 }
 
 .chatItemSelected {
-  background-color: #f0f0f0;
+  background-color: rgba(128, 128, 128, 0.5); /* Gray with 50% transparency */
   border: 2px solid blue;
+}
+
+.chatroom {
+  display: flex;
+  flex-direction: column;
+  max-height: 900px; /* Adjust based on your design needs */
+  overflow-y: auto; /* Show scrollbar when necessary */
+  width: 100%; 
+  margin: 0; /* Example: Removing margin */
+  padding: 0; /* Example: Removing padding */
+}
+
+.sender, .receiver {
+  /* Common styles */
+  padding: 10px;
+  border-radius: 20px;
+  margin: 10px 0; /* Adjusted for better vertical spacing */
+  max-width: 100%; /* Optional: max width for messages */
+    margin-right: 10px; /* Smaller margin for narrow screens */
+    margin-left: 10px; /* Adjusted for consistency */
+  
+}
+
+.sender {
+  align-self: flex-end; /* Align sender messages to the right */
+  background-color: #c6f8dd;
+}
+
+.receiver {
+  align-self: flex-start; /* Align receiver messages to the left */
+  background-color: #ffffff;
 }

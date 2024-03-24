@@ -192,7 +192,6 @@ function Dashboard() {
              <h1>Chats</h1> 
              <CreateChatModal className='createChatButton'/>
           </div>
-          <button >test </button>
           <div>
       {isLoading ? (
         <div>Loading chat rooms...</div>
@@ -208,21 +207,11 @@ function Dashboard() {
         ))
       )}
     </div>
-
-          
-          <div>
-  </div>
-        
-
-        </div>
-        <div className="chatroom">
+      </div>
+        <div className='chatroom_Component'>
           <Chatroom selectedId={selectedId} foundMessages={foundMessages}/>
-        
-      
-       
         </div>
       </div>
-
     </div>
   );
   
