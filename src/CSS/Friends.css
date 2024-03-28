@@ -1,8 +1,8 @@
 .container-friends {
-    display: flex;
-    justify-content: space-between; /* Spreads the sections evenly */
-    padding: 20px; /* Adjust as needed */
-    height: 60vh; 
+  display: flex;
+  justify-content: space-between; /* Spreads the sections evenly */
+  padding: 20px; /* Adjust as needed */
+  height: 60vh; 
     
   }
   
@@ -26,6 +26,8 @@
     background-color: rgb(40, 118, 92);
     height: 100%;
     
+    
+    
   }
 
   html, body {
@@ -45,10 +47,17 @@
     align-items: center; /* Align items vertically in the center */
     margin-right: 10px;
     margin:10px
- 
-
+  
   }
   
+  .person-name {
+    margin-right: auto; /* Pushes everything else to the right */
+  }
+  
+  .button2 {
+    /* Other styles remain */
+    margin-left: 10px; /* Ensure there’s space between buttons if side by side */
+  }
   
 
     .button2 {

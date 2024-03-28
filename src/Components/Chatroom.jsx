@@ -13,17 +13,25 @@ function Chatroom({selectedId, foundMessages}) {
     const [users, setUsers] = useState([]);
     const [message, setMessage] = useState("");
     const [messageId, setMessageId] = useState("");
-
     const [messageReceived, setMessageRecieved] = useState([]);
     const { setIsLoggedIn, isLoggedIn, currentUserID, currentUser } = useAuth();
     const [chatRoomFound, setChatRoomFound] = useState([]);
     const socketRef = useRef(null); // Use ref to store the socket instance
     const [sendMessageClicked, setSendMessageClicked] = useState(false);
+    const [dateRendered, setDateRendered] = useState([]);
+    const now = new Date();
 
     const handleReceiveMessage = (messageData) => {
       console.log("handleReceiveMessage triggered", messageData);
       setMessageReceived(prev => [...prev, messageData]);
     };
+
+    const formattedTimestamp = new Intl.DateTimeFormat('en-US', {
+      year: 'numeric', month: 'long', day: 'numeric',
+      hour: 'numeric', minute: 'numeric', second: 'numeric',
+      hour12: true // Use hour12: false for 24-hour format
+    }).format(now);
+
 
 
     useEffect(() => {
@@ -51,6 +59,8 @@ function Chatroom({selectedId, foundMessages}) {
       console.log("Setting up 'receive_message' event listener");
       socketRef.current.on("receive_message", (newMessage,) => {
         setMessageRecieved((prev) => [...prev, newMessage]);
+        console.log(messageReceived);
+
 
     });
 
@@ -84,7 +94,8 @@ function Chatroom({selectedId, foundMessages}) {
           const messageData = {
               message: message,
               senderId: currentUserID,
-              chatRoomId: selectedId
+              chatRoomId: selectedId,
+              timeStamp: formattedTimestamp
                // Assuming you have access to the currentUserID
               // You can add more data here if needed
           };
@@ -99,6 +110,7 @@ function Chatroom({selectedId, foundMessages}) {
   };
 
 
+  
 
   
     const displayChat = async () => {
@@ -111,7 +123,23 @@ function Chatroom({selectedId, foundMessages}) {
       }
     }
 
-    
+   
+    const renderDate = (messageObject) => {
+      if (messageObject) {
+        const date = messageObject.timeStamp; // Ensure `date` is declared
+        if (!dateRendered.includes(date)) {
+          // You should manage `dateRendered` updates elsewhere to not directly cause side-effects in render.
+          return <div key={date} className={messageObject.senderId === currentUserID ? 'senderDate' : 'receiverDate'} >{date}</div>; 
+          
+        
+
+        }
+a
+      }
+      return null; // Return null if conditions aren't met
+    };
+
+
 
     useEffect(() => {
       if (isLoggedIn) {
@@ -119,57 +147,81 @@ function Chatroom({selectedId, foundMessages}) {
       }
     }, [isLoggedIn]); // Depend on isLoggedIn state
     
+  
+    
 
-
-
-
-
-  return (
-   
-    <>
-    <div></div>
-    <div>
-      <br/>
-    <div className='message-Container'>
-      <h1>Messages:</h1>
-
-    </div>    
-  <div className="chatroom">
-  <button onClick={() => {console.log(messageReceived)}}>Test</button>
- 
-  {!foundMessages ? (
-      <div>Loading...</div>
-    ) : (
-      foundMessages.map((msg, index) => (
-        <div key={index} className={msg.senderId === currentUserID ? 'sender' : 'receiver'}>
-          {msg.message}
+  
+    return (
+      <>
+        <div>
+          <br/>
+          <div className='message-Container'>
+            {/* Content for message-Container might go here */}
+          </div>    
+    
+          <div className="chatroom">
+            {(!foundMessages || !foundMessages.length) && (!messageReceived || !messageReceived.length) ? (
+              <div className="StartChatNowPrompt">Start Chatting Now!</div>
+            ) : (
+              <>
+                {foundMessages && foundMessages.map((msg, index) => (
+                  <div key={"found" + index} className={`messageContainer ${msg.senderId === currentUserID ? 'sender' : 'receiver'}`}>
+                    {msg.senderId === currentUserID ? (
+                      <>
+                        <div>
+                          {renderDate(msg)}
+                        </div>
+                        <div className="messageContent">
+                          {msg.message}
+                        </div> 
+                      </>
+                    ) : (
+                      <>
+                        <div className="messageContent">
+                          {msg.message}
+                        </div> 
+                        <div>
+                          {renderDate(msg)}
+                        </div>
+                      </>
+                    )}
+                  </div>
+                ))}
+    
+                {messageReceived && messageReceived.map((msg, index) => (
+                  <div key={"received" + index} className={`messageContainer ${msg.senderId === currentUserID ? 'sender' : 'receiver'}`}>
+                    {msg.senderId === currentUserID ? (
+                      <>
+                        <div>
+                          {renderDate(msg)}
+                        </div>
+                        <div className="messageContent">
+                          {msg.message}
+                        </div> 
+                      </>
+                    ) : (
+                      <>
+                        <div className="messageContent">
+                          {msg.message}
+                        </div> 
+                        <div>
+                          {renderDate(msg)}
+                        </div>
+                      </>
+                    )}
+                  </div>
+                ))}
+              </>
+            )}
+          </div>
+    
+          <div className='textBar'>
+            <input className="textInput" value={message} type="text" placeholder='Message...' onChange={(event) => setMessage(event.target.value)} />
+            <button className="button3" onClick={sendMessage}>Send Message</button>
+          </div>
         </div>
-      ))
-    )}
-</div>
-
-    <div className='textBar'>
-  <input className="textInput" value={message} type="text" 
- placeholder='Message...' onChange={(event) =>{
-      setMessage(event.target.value); }} />
-  <button className="button3" onClick={sendMessage}>Send message</button>
-  </div>
-
-  <div>Messages after database found: </div>
-
-  <div className="chatroom">
-    {messageReceived.map((msg, index) => (
-    <div key={index} className={msg.senderId === currentUserID ? 'sender' : 'receiver'}>
-      {msg.message} {/* Assuming 'message' is the property containing the message text */}
-    </div>
-  ))}
-
-
-</div>
-
-</div>
-    </>
-  )
-}
-
-export default Chatroom;
+      </>
+    );
+  }
+    
+    export default Chatroom;

@@ -7,7 +7,7 @@ import Chatroom from './Chatroom';
 import('../CSS/ChatApplication.css')
 import { useAuth } from '../AuthContext.jsx'
 import CreateChatModal from './CreateChatModal.jsx';
-
+import DeleteChatModal from './DeleteChatModal.jsx'
 function Dashboard() {
   const { setIsLoggedIn, isLoggedIn, currentUserID, currentUser } = useAuth();
   const [isLoading, setIsLoading] = useState(true); // Initially, data is loading
@@ -182,6 +182,7 @@ function Dashboard() {
   
 
 
+
   return (
     <div>
       <Navigation /> 
@@ -190,10 +191,14 @@ function Dashboard() {
         <div className="content">
           <div className='dashboard_title'>         
              <h1>Chats</h1> 
-             <CreateChatModal className='createChatButton'/>
+  
           </div>
+          <CreateChatModal className='createChatButton'/>
+          <br/>
+          <DeleteChatModal className='createChatButton'/>
+
           <div>
-      {isLoading ? (
+      {!chatNames || chatNames.length == 0 ? (
         <div>Loading chat rooms...</div>
       ) : (
         chatNames.map(({ _id, name }) => (

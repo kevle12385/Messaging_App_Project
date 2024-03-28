@@ -8,7 +8,7 @@ import { AuthProvider } from './AuthContext';
 import LandingPage from './Components/LandingPage';
 import ProtectedRoute from './ProtectedRoute.jsx'; // Import your protected route component
 import Friends from './Components/Friends.jsx';
-
+import Profile from './Components/Profile.jsx';
 function App() {
   const URL = import.meta.env.VITE_API_URL;
 
@@ -25,22 +25,19 @@ function App() {
     <AuthProvider>
      
         <Routes>
-          {/* Apply the PrivateRoute component */}
-          {/* <Route path="/" element={
-             <PrivateRoute><Dashboard /></PrivateRoute> 
-          } /> */}
               <Route path="/dashboard" element={
               <ProtectedRoute>
                 <Dashboard />
                 <Friends/>
+                <Profile />
               </ProtectedRoute>
             } />
-        <Route path='/' element={<LandingPage/>}  />
-          <Route path="/signup" element={<SignUpScreen URL={URL} />} />
-          <Route path="/login" element={<LoginScreen URL={URL} />} />
-          <Route path="/dashboard" element={<Dashboard URL={URL} />} />
-          <Route path="/friends" element={<Friends URL={URL} />} />
-          <Route path="/profile" element={<Friends URL={URL} />} />
+          <Route path='/' element={<LandingPage/>}  />
+            <Route path="/signup" element={<SignUpScreen URL={URL} />} />
+            <Route path="/login" element={<LoginScreen URL={URL} />} />
+            <Route path="/dashboard" element={<Dashboard URL={URL} />} />
+            <Route path="/friends" element={<Friends URL={URL} />} />
+            <Route path="/profile" element={<Profile URL={URL} />} />
 
         </Routes>
         </AuthProvider>

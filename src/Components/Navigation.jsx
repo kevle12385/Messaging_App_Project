@@ -6,6 +6,7 @@ import Dashboard from './Dashboard';
 import '../CSS/Navigation.css'
 import LogoutButton from './Logout';
 import Friends from './Friends';
+import Profile from './Profile';
 function Navigation() {
   const { isLoggedIn, logout } = useAuth();
  
@@ -29,7 +30,7 @@ function Navigation() {
           <Link to="/dashboard" className="nav-item">Messages</Link>
           <Link to="/friends" className="nav-item">Friends</Link>
 
-          <Link className="nav-item">Profile</Link>
+          <Link to="/profile" className="nav-item">Profile</Link>
           <LogoutButton className="nav-item logout-button" />
         </>
       )}

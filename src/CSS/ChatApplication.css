@@ -158,7 +158,7 @@
 .chatroom {
   display: flex;
   flex-direction: column;
-  max-height: 900px; /* Adjust based on your design needs */
+  max-height: 1100px; /* Adjust based on your design needs */
   overflow-y: auto; /* Show scrollbar when necessary */
   width: 100%; 
   margin: 0; /* Example: Removing margin */
@@ -167,20 +167,71 @@
 
 }
 
-.sender, .receiver {
+
+.sender {
+  margin-left: auto; /* Pushes sender messages to the right */
+}
+
+.messageContainer.sender .messageContent {
+  background-color: #c6f8dd;
   padding: 10px;
   border-radius: 20px;
   margin:  10px; /* Horizontal margin */
   display: inline-block; /* Makes the div behave like an inline element around the content */
   word-wrap: break-word; /* Ensures long words do not overflow */
+  font-size: 25px; /* Adjust the size as needed */
+
 }
 
-.sender {
-  background-color: #c6f8dd;
-  margin-left: auto; /* Pushes sender messages to the right */
+.messageContainer.receiver .messageContent {
+  /* Styles specific to receiver messages */
+  background-color: #FFF; /* Example: White background */
+ 
+  padding: 10px;
+  border-radius: 20px;
+  margin:  10px; /* Horizontal margin */
+  display: inline-block; /* Makes the div behave like an inline element around the content */
+  word-wrap: break-word; /* Ensures long words do not overflow */
+  font-size: 25px; /* Adjust the size as needed */
 }
-
 .receiver {
-  background-color: #ffffff;
   margin-right: auto; /* Pushes receiver messages to the left */
+}
+
+.StartChatNowPrompt{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  top: 100px;
+  height: 100vh; /* Adjust the height as needed */
+  font-size: 40px; /* Adjust the size as needed */
+  text-align: center;
+  padding: 20px; /* Adds padding to ensure text is not right at the edge */
+
+}
+
+
+.senderDate {
+  display: none;
+
+}
+
+.receiverDate {
+  display: none;
+
+}
+
+.sender:hover .senderDate  {
+  display: block;
+}
+
+.receiver:hover .receiverDate  {
+  display: block;
+}
+
+.messageContainer{
+  display: flex;
+    
+  align-items: center; /* Centers items vertically, adjust as needed */
+
 }
