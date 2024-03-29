@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import CreateChatRoomContent from './CreateChatRoomContent';
 import "../CSS/Modal.css";
 
-function CreateChatModal() {
+function CreateChatModal({displayChat, findChatNames,setChatNames, chatNames, selectedId, setSelectedId}) {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const openModal = () => setIsModalOpen(true);
@@ -15,7 +15,7 @@ function CreateChatModal() {
       {isModalOpen && (
         <div className="modal-backdrop">
           <div className="modal-content">
-            <CreateChatRoomContent onClose={closeModal} />
+            <CreateChatRoomContent onClose={closeModal}  displayChat={displayChat} setChatNames={setChatNames} setSelectedId={setSelectedId} selectedId={selectedId} chatNames={chatNames}findChatNames={findChatNames} />
           </div>
         </div>
       )}

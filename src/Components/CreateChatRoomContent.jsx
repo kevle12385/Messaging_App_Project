@@ -4,7 +4,7 @@ import { useAuth } from '../AuthContext.jsx'
 import axios from 'axios';
 import('../CSS/ChatApplication.css')
 
-function CreateChatRoomContent({onClose}) {
+function CreateChatRoomContent({onClose,displayChat, findChatNames,setChatNames, chatNames, selectedId, setSelectedId}) {
     const { setIsLoggedIn, isLoggedIn, currentUserID, currentUser } = useAuth();
     const [isLoading, setIsLoading] = useState(true); // Initially, data is loading
     const [friendList, setFriendList] =  useState([]);
@@ -71,16 +71,17 @@ function CreateChatRoomContent({onClose}) {
 
         try {
           const response = await axios.post('/api/createChatRoom', { user1, user2, name1, name2 });
-          setChatRooms(response.data);
+          // setChatRooms(currentRooms => [...currentRooms, response.data]);
+          // await displayChat();
+          window.location.reload();
+          console.log(chatNames)
+          console.log(chatRooms)
+           onClose();
             console.log('Chat room created successfully:', response.data);
-            // Update UI here, for example, showing a success message
-            // or redirecting the user to the new chat room
-          
+        
         } catch (error) {
           console.error('Error creating chat room:', error);
-          // Inform the user of the error, for example:
-          // This assumes you have a state or a method to communicate errors to the user
-          // setErrorMessage('Failed to create chat room. Please try again.');
+      
         }
       };
       

@@ -16,7 +16,7 @@ function Dashboard() {
   const [userId, setUserId] =  useState('');
   const [selectedPersonId, setSelectedPersonId] = useState(null);
   const [chatNames, setChatNames] = useState([]);
-  const [chatRooms, setChatRooms] =  useState([]);
+  const [chatRoom, setchatRoom] =  useState([]);
   const [chatUpdateCount, setChatUpdateCount] = useState(0);
   const [selectedChatId, setSelectedChatId] = useState(null);
   const [selectedId, setSelectedId] = useState(null);
@@ -40,9 +40,7 @@ function Dashboard() {
     }
   
   };
-  
-
-                                      
+                       
   
 
   const showFriends = async () => {
@@ -87,42 +85,41 @@ function Dashboard() {
     }
   };
 
- 
 
-  const displayChat = async () => {
+
+  const fecthChatRoomData = async () => { 
     const userId = await fetchUserIdFromEmail();
     try {
-      const response = await axios.post('/api/showChatRooms', {userId});
-      
-      setChatRooms(response.data); // Assuming response.data is the direct structure you want
-      console.log('Chat rooms found:', response.data);
-      
-      // After successfully updating chatRooms, call findChatNames
-      findChatNames();
+      const response = await axios.post('/api/showchatRoom', { userId });
+      console.log('Updated chat rooms:', response.data);
+      setchatRoom(response.data); // Directly update chatRoom with the fetched list
+      // Assuming findChatName processes chatRoom to update chatNames for rendering
+      findChatName();
     } catch (error) {
-      console.error('Error finding Chatrooms:', error);
-      // Inform the user of the error, for example:
-      // setErrorMessage('Failed to create chat room. Please try again.');
+      console.error('Error finding chatRoom:', error);
     }
   };
   
 
-  const findChatNames = () => {
+            
+  const findChatName = () => {
+    // Assuming chatRooms and currentUser are defined and accessible
     if (Array.isArray(chatRooms?.chatRooms)) {
       const chatData = chatRooms.chatRooms.map(room => {
-        const name = room.names[0] === currentUser
-          ? room.names[1] ?? room.names[0]
-          : room.names[0];
+        // Filter out the current user and pick the first remaining user's name as the chat name
+        const otherUser = room.users.find(user => user.id !== currentUser)?.name;
+        
+        // If there's no other user (which should theoretically never happen), use a placeholder
+        const name = otherUser || 'Unknown';
   
-        // Simply return the name, _id, and messages for now
+        // Return the room's ID, the determined name, and messages
         return { name, _id: room._id, messages: room.messages };
       });
   
       // Update the chat names based on the mapped data
       setChatNames(chatData);
-  
+      console.log(chatNames)
       // Find and set messages for the selected room separately
-     
       const selectedRoom = chatData.find(room => room._id === selectedRoomId);
       if (selectedRoom) {
         setChatMessages(selectedRoom.messages);
@@ -133,6 +130,7 @@ function Dashboard() {
       setChatMessages([]); // Ensure chat messages are cleared if no rooms are found
     }
   };
+  
   
   
     
@@ -147,7 +145,7 @@ function Dashboard() {
     if (isLoggedIn) { 
       async function loadData() {
         try {
-          await Promise.all([showFriends(),findChatNames()]); // Just wait for this single async function to resolve
+          await Promise.all([showFriends(),findChatName()]); // Just wait for this single async function to resolve
           setIsLoading(false); // Set loading to false after data fetching
         } catch (error) {
           console.error('Error loading data:', error);
@@ -166,12 +164,12 @@ function Dashboard() {
         navigate('/login');
       }
     }
-  }, [isLoggedIn]); // Depend on the authentication state
+  }, [isLoggedIn, setChatNames]); // Depend on the authentication state
   
   useEffect(() => {
     const fetchData = async () => {
       if (isLoggedIn && chatUpdateCount < 5) {
-        await displayChat();
+        await fecthChatRoomData();
         setChatUpdateCount(prev => prev + 1); // Increment the counter
       }
     };
@@ -189,13 +187,15 @@ function Dashboard() {
       <div className="container">
 
         <div className="content">
-          <div className='dashboard_title'>         
+          <div className='dashboard_title'>
+          <button onClick={() => {fecthChatRoomData()
+          }}>Test</button>         
              <h1>Chats</h1> 
   
           </div>
-          <CreateChatModal className='createChatButton'/>
+          <CreateChatModal className='createChatButton' fecthChatRoomData={fecthChatRoomData} setChatNames={setChatNames} setSelectedId={setSelectedId} selectedId={selectedId} chatNames={chatNames}findChatName={findChatName}/>
           <br/>
-          <DeleteChatModal className='createChatButton'/>
+          <DeleteChatModal className='createChatButton' fecthChatRoomData={fecthChatRoomData} setChatNames={setChatNames} setSelectedId={setSelectedId} selectedId={selectedId} chatNames={chatNames}findChatName={findChatName}/>
 
           <div>
       {!chatNames || chatNames.length == 0 ? (
