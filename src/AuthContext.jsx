@@ -120,7 +120,7 @@ const clearCookie = (name, path = '/', domain = '') => {
     }
 
     return (
-        <AuthContext.Provider value={{ isLoggedIn, login, logout, currentUserID, currentUser  }}>
+        <AuthContext.Provider value={{ isLoggedIn, login, logout, currentUserID, currentUser, fetchUserInfo  }}>
             {children}
         </AuthContext.Provider>
     );

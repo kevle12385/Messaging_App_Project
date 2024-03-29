@@ -1,14 +1,21 @@
-import React, { useState } from 'react';
+import React, { useState , useEffect} from 'react';
 import Navigation from './Navigation';
 import { useAuth } from '../AuthContext.jsx';
 import axios from 'axios';
 import '../CSS/Profile.css'
+import { useNavigate } from 'react-router-dom';
+
+
+
 const Profile = () => {
-    const { currentUser } = useAuth();
+    const { currentUser, fetchUserInfo , setIsLoggedIn, isLoggedIn } = useAuth();
     const [message, setMessage] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const navigate = useNavigate();
+    const [isLoading, setIsLoading] = useState(true);
 
+    
     const fetchCookieEmail = () => {
         if (!document.cookie) return null;
 
@@ -43,6 +50,8 @@ const Profile = () => {
     const changeName = async (e) => {
         e.preventDefault();
         if (message.trim() === "") {
+            alert('The new name cannot be empty.')
+
             // Here you can set an error state and display it in your UI, or simply log an error
             console.error('Error: The new name cannot be empty.');
             return; // Stop execution of the function here
@@ -52,6 +61,8 @@ const Profile = () => {
             const response = await axios.post('/api/changeName', { userId, newName: message });
             // Assuming you want to do something with the response here,
             // like displaying a success message
+            await fetchUserInfo();
+
         } catch (error) {
             console.error('Error Setting name', error);
             // Here, too, you could update your UI to reflect the error
@@ -62,6 +73,7 @@ const Profile = () => {
         e.preventDefault();
         if (email.trim() === "") {
             console.error('Error: The new email cannot be empty.');
+            alert('The new email cannot be empty.')
             return;
         }
         // Email validation regex
@@ -83,10 +95,13 @@ const Profile = () => {
         e.preventDefault();
         // Assuming `password` is the correct variable holding the new password
         if (/\s/.test(password.trim())) {
+            alert('The password cannot contain spaces.')
             console.error('Error: The password cannot contain spaces.');
             return;
         }
         if (password.trim().length < 8) {
+            alert('The password must be at least 8 characters.')
+
             console.error('Error: The password must be at least 8 characters long.');
             return;
         }
@@ -96,17 +111,44 @@ const Profile = () => {
             const trimmedPassword = password.trim();
             const response = await axios.post('/api/changePassword', { userId, newPassword: trimmedPassword });
             // Assuming you want to handle success, e.g., notifying the user
+            
             console.log('Password changed successfully');
         } catch (error) {
             console.error('Error setting password', error);
+            
         }
     };
     
     
-
-
-
+    useEffect(() => {
+        if (isLoggedIn) { 
+          async function loadData() {
+            try {
+              // Assuming fetchFriends and showfriendRequests are async and return Promises
+              await Promise.all([fetchUserInfo(), ]);
+              setIsLoading(false); // Set loading to false after data fetching
+            } catch (error) {
+              console.error('Error loading data:', error);
+              setIsLoading(false); // Also set loading to false in case of error
+            }
+          }
+      
+          loadData();
+        } else {
+          const email1= fetchCookieEmail();
+          if (email1) {
+            setIsLoggedIn(true); // or update your auth context/state accordingly
+          } else {
+            navigate('/login');
+          }
+        }
+      }, [isLoggedIn]); // Depend on the authentication state
     
+
+      if (isLoading) {
+        return <div>Loading...</div>;
+    }
+
     return (
         <>
             <Navigation />
@@ -122,16 +164,16 @@ const Profile = () => {
                 </div>
                 <div className="section">
                     <h2>Change Email</h2>
-                    <form>
-                        <input type='text' placeholder='New Email' />
+                    <form onSubmit={changeEmail}>
+                        <input type='text' placeholder='New Email' onChange={onChange1}/>
                         <br/>
                         <button type="submit">Submit</button>
                     </form>
                 </div>
                 <div className="section">
                     <h2>Reset Password</h2>
-                    <form>
-                        <input type='text' placeholder='New Password' />
+                    <form onSubmit={changePassword}>
+                        <input type='text' placeholder='New Password' onChange={onChange2} />
                         <br/>
                         <button type="submit">Submit</button>
                     </form>
@@ -139,13 +181,14 @@ const Profile = () => {
                 <div className="section">
                     <h2>Delete Account</h2>
                     <form>
-                        {/* Presumably some action here */}
+                        {/* Implementation for account deletion */}
                         <button type="button">Delete</button>
                     </form>
                 </div>
             </div>
         </>
     );
-}
+};
+
 
 export default Profile;

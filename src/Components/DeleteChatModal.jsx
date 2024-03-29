@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import DeleteChatContent from './DeleteChatContent'; 
 import "../CSS/Modal.css";
 
-function DeleteChatModal({displayChat, findChatNames,setChatNames, chatNames, selectedId, setSelectedId }) {
+function DeleteChatModal({setchatObject, chatObject, findChatObject, selectedId, setSelectedId }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const openModal = () => setIsModalOpen(true);
@@ -17,7 +17,7 @@ function DeleteChatModal({displayChat, findChatNames,setChatNames, chatNames, se
       {isModalOpen && (
         <div className="modal-backdrop">
           <div className="modal-content">
-          <DeleteChatContent onClose={closeModal} displayChat={displayChat} setChatNames={setChatNames} setSelectedId={setSelectedId} selectedId={selectedId}  chatNames={chatNames} findChatNames={findChatNames}/>
+          <DeleteChatContent onClose={closeModal}findChatObject={findChatObject} setSelectedId={setSelectedId} selectedId={selectedId}  chatObject={chatObject} setchatObject={setchatObject} />
 
           </div>
         </div>

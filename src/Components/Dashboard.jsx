@@ -200,9 +200,9 @@ function Dashboard() {
              <h1>Chats</h1> 
   
           </div>
-          <CreateChatModal className='createChatButton' fecthChatRoomData={fecthChatRoomData} setchatObject={setchatObject} setSelectedId={setSelectedId} selectedId={selectedId} chatObject={chatObject}findChatObject={findChatObject}/>
+          <CreateChatModal className='createChatButton' fecthChatRoomData={fecthChatRoomData} setchatObject={setchatObject} setSelectedId={setSelectedId} selectedId={selectedId} chatObject={chatObject}/>
           <br/>
-          <DeleteChatModal className='createChatButton' fecthChatRoomData={fecthChatRoomData} setchatObject={setchatObject} setSelectedId={setSelectedId} selectedId={selectedId} chatObject={chatObject}findChatObject={findChatObject}/>
+          <DeleteChatModal className='createChatButton' fecthChatRoomData={fecthChatRoomData} setchatObject={setchatObject} setSelectedId={setSelectedId} selectedId={selectedId} chatObject={chatObject} findChatObject={findChatObject}/>
 
           <div>
       {!chatObject || chatObject.length == 0 ? (

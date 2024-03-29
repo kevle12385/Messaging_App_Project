@@ -4,12 +4,10 @@ import { useAuth } from '../AuthContext.jsx'
 import axios from 'axios';
 import('../CSS/ChatApplication.css')
 
-function DeleteChatContent({onClose, displayChat, setChatNames, findChatNames, chatNames, selectedId, setSelectedId}) {
+function DeleteChatContent({onClose ,chatObject, setchatObject, findChatObject, fecthChatRoomData, selectedId, setSelectedId}) {
     const { setIsLoggedIn, isLoggedIn, currentUserID, currentUser } = useAuth();
     const [isLoading, setIsLoading] = useState(true); // Initially, data is loading
-    const [friendList, setFriendList] =  useState([]);
     const [userId, setUserId] =  useState('');
-    const [selectedPersonName, setSelectedPersonName] = useState(null);
     const [feedback, setFeedback] = useState("");
 
 
@@ -41,27 +39,7 @@ function DeleteChatContent({onClose, displayChat, setChatNames, findChatNames, c
         }
       };
     
-      const showFriends = async () => {
-        try {
-          const userID = await fetchUserIdFromEmail();
-          // Step 1: Fetch the list of friend IDs
-          let response = await axios.post('/api/showFriendList', { userID: userID });
-          const friendIDs = response.data.friends; // Assuming the endpoint returns an object with a 'friends' property that is an array of IDs
-          console.log(friendIDs)
-          // Step 2: Fetch detailed information for each friend
-          if (friendIDs && friendIDs.length > 0) {
-            response = await axios.post('/api/friendsDetails', { friends: friendIDs });
-            const friendDetails = response.data; // This should be the array of friend objects with detailed information
-            setFriendList(friendDetails); // Update your state with the detailed friend information
-            console.log(friendDetails)
-          } else {
-            setFriendList([]); // Handle the case where there are no friends
-          }
-        } catch (error) {
-          console.error('Error returning Friend List:', error);
-        }
-      };
-
+      
       const DeleteChat = async () => {
         
         const user2 = selectedId;
@@ -71,7 +49,7 @@ function DeleteChatContent({onClose, displayChat, setChatNames, findChatNames, c
           const response = await axios.post('/api/deleteChatroom', {user2});
           
           if (response.data.message === "Chatroom deleted successfully") {
-            setChatNames(prevRooms => prevRooms.filter(room => room._id !== user2));
+            setchatObject(prevRooms => prevRooms.filter(room => room._id !== user2));
             setFeedback("Chat room deleted successfully");
             setSelectedId(null);
             // await displayChat();
@@ -101,7 +79,7 @@ function DeleteChatContent({onClose, displayChat, setChatNames, findChatNames, c
                 try {
                   // Ensure both displayChat and showFriends are called as functions
                   // and awaited together using Promise.all
-                  await Promise.all([showFriends()]);
+                  await Promise.all([findChatObject()]);
                   setIsLoading(false); // Set loading to false after data fetching
                 } catch (error) {
                   console.error('Error loading data:', error);
@@ -121,14 +99,14 @@ function DeleteChatContent({onClose, displayChat, setChatNames, findChatNames, c
         <div>Pick a Chat</div>
 
         <div>
-      {!chatNames || chatNames.length == 0 ? (
+      {!chatObject || chatObject.length == 0 ? (
         <div>Loading chat rooms...</div>
       ) : (
-        chatNames.map(({ _id, name }) => (
+        chatObject.map(({ _id, name }) => (
           <div
             key={_id}
             onClick={() => handleSelect(_id)}
-            className={`chatItem ${selectedId === _id ? 'chatItemSelected' : ''}`}
+            chatObject={`chatItem ${selectedId === _id ? 'chatItemSelected' : ''}`}
           >
             {name}
           </div>
@@ -136,9 +114,9 @@ function DeleteChatContent({onClose, displayChat, setChatNames, findChatNames, c
       )}
     </div>
 
-        <button onClick={DeleteChat} className='button1'>Delete Chat</button>
+        <button onClick={DeleteChat} chatObject='button1'>Delete Chat</button>
 
-        <button className='button1' onClick={onClose}>Close</button>
+        <button chatObject='button1' onClick={onClose}>Close</button>
     </>
   )
 }
