@@ -15,8 +15,8 @@ function Dashboard() {
   const [friendList, setFriendList] =  useState([]);
   const [userId, setUserId] =  useState('');
   const [selectedPersonId, setSelectedPersonId] = useState(null);
-  const [chatNames, setChatNames] = useState([]);
-  const [chatRoom, setchatRoom] =  useState([]);
+  const [chatObject, setchatObject] = useState([]);
+  const [chatRooms, setchatRooms] =  useState([]);
   const [chatUpdateCount, setChatUpdateCount] = useState(0);
   const [selectedChatId, setSelectedChatId] = useState(null);
   const [selectedId, setSelectedId] = useState(null);
@@ -31,7 +31,7 @@ function Dashboard() {
     setSelectedId(_id);
   
     // Find the chat room by _id and set its messages to the state
-    const selectedRoom = chatNames.find(room => room._id === _id);
+    const selectedRoom = chatObject.find(room => room._id === _id);
     if (selectedRoom) {
       // This sets foundMessages to be the array of message objects
       setFoundMessages(selectedRoom.messages);
@@ -90,52 +90,60 @@ function Dashboard() {
   const fecthChatRoomData = async () => { 
     const userId = await fetchUserIdFromEmail();
     try {
-      const response = await axios.post('/api/showchatRoom', { userId });
+      const response = await axios.post('/api/showChatRooms', { userId });
       console.log('Updated chat rooms:', response.data);
-      setchatRoom(response.data); // Directly update chatRoom with the fetched list
-      // Assuming findChatName processes chatRoom to update chatNames for rendering
-      findChatName();
+      setchatRooms(response.data); // Directly update chatRooms with the fetched list
+      // Assuming findChatObject processes chatRooms to update chatObject for rendering
+      findChatObject()
     } catch (error) {
-      console.error('Error finding chatRoom:', error);
+      console.error('Error finding chatRooms:', error);
     }
   };
   
 
             
-  const findChatName = () => {
-    // Assuming chatRooms and currentUser are defined and accessible
-    if (Array.isArray(chatRooms?.chatRooms)) {
+  const findChatObject= () => {
+    // Assuming chatRooms and currentUser are correctly passed and accessible in the scope
+    if (Array.isArray(chatRooms.chatRooms)) {
       const chatData = chatRooms.chatRooms.map(room => {
+
         // Filter out the current user and pick the first remaining user's name as the chat name
-        const otherUser = room.users.find(user => user.id !== currentUser)?.name;
+        const otherUser = room.users.find(user => user.id !== currentUserID)?.name;
         
-        // If there's no other user (which should theoretically never happen), use a placeholder
+        // If there's no other user, use a placeholder
         const name = otherUser || 'Unknown';
   
         // Return the room's ID, the determined name, and messages
         return { name, _id: room._id, messages: room.messages };
       });
   
+      // Log the processed chat data
+      console.log(chatData);
+  
       // Update the chat names based on the mapped data
-      setChatNames(chatData);
-      console.log(chatNames)
+      setchatObject(chatData);
+  
       // Find and set messages for the selected room separately
       const selectedRoom = chatData.find(room => room._id === selectedRoomId);
       if (selectedRoom) {
-        setChatMessages(selectedRoom.messages);
+        setFoundMessages(selectedRoom.messages);
       }
     } else {
       // Handle the case where there are no chat rooms
-      setChatNames([]);
-      setChatMessages([]); // Ensure chat messages are cleared if no rooms are found
+      setchatObject([]);
+      setFoundMessages([]); // Ensure chat messages are cleared if no rooms are found
     }
   };
   
   
   
+  
     
     
-    
+  useEffect(() => {
+    console.log("Updated chatObject:", chatObject);
+  }, [chatObject]);
+  
 
 
 
@@ -145,7 +153,7 @@ function Dashboard() {
     if (isLoggedIn) { 
       async function loadData() {
         try {
-          await Promise.all([showFriends(),findChatName()]); // Just wait for this single async function to resolve
+          await Promise.all([showFriends(),findChatObject()]); // Just wait for this single async function to resolve
           setIsLoading(false); // Set loading to false after data fetching
         } catch (error) {
           console.error('Error loading data:', error);
@@ -164,7 +172,7 @@ function Dashboard() {
         navigate('/login');
       }
     }
-  }, [isLoggedIn, setChatNames]); // Depend on the authentication state
+  }, [isLoggedIn, setchatObject]); // Depend on the authentication state
   
   useEffect(() => {
     const fetchData = async () => {
@@ -188,20 +196,19 @@ function Dashboard() {
 
         <div className="content">
           <div className='dashboard_title'>
-          <button onClick={() => {fecthChatRoomData()
-          }}>Test</button>         
+        
              <h1>Chats</h1> 
   
           </div>
-          <CreateChatModal className='createChatButton' fecthChatRoomData={fecthChatRoomData} setChatNames={setChatNames} setSelectedId={setSelectedId} selectedId={selectedId} chatNames={chatNames}findChatName={findChatName}/>
+          <CreateChatModal className='createChatButton' fecthChatRoomData={fecthChatRoomData} setchatObject={setchatObject} setSelectedId={setSelectedId} selectedId={selectedId} chatObject={chatObject}findChatObject={findChatObject}/>
           <br/>
-          <DeleteChatModal className='createChatButton' fecthChatRoomData={fecthChatRoomData} setChatNames={setChatNames} setSelectedId={setSelectedId} selectedId={selectedId} chatNames={chatNames}findChatName={findChatName}/>
+          <DeleteChatModal className='createChatButton' fecthChatRoomData={fecthChatRoomData} setchatObject={setchatObject} setSelectedId={setSelectedId} selectedId={selectedId} chatObject={chatObject}findChatObject={findChatObject}/>
 
           <div>
-      {!chatNames || chatNames.length == 0 ? (
+      {!chatObject || chatObject.length == 0 ? (
         <div>Loading chat rooms...</div>
       ) : (
-        chatNames.map(({ _id, name }) => (
+        chatObject.map(({ _id, name }) => (
           <div
             key={_id}
             onClick={() => handleSelect(_id)}

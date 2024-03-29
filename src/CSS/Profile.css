@@ -1,0 +1,37 @@
+.profile-container {
+    max-width: 800px; /* Increased container width */
+    margin: 0 auto;
+    padding: 40px; /* Increased padding for more space inside */
+}
+
+.section {
+    margin-bottom: 30px; /* Larger margin for more space between sections */
+    padding: 20px; /* Increased padding */
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1.2em; /* Larger text */
+}
+
+.section h2 {
+    margin-top: 0;
+    font-size: 1.5em; /* Even larger text for headings */
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+input[type="text"], button {
+    padding: 15px; /* Increased padding for larger form elements */
+    font-size: 1.1em; /* Larger text */
+}
+
+button {
+    cursor: pointer;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    transition: background-color 0.2s ease-in-out;
+}
