@@ -4,15 +4,13 @@ import { useAuth } from '../AuthContext.jsx'
 import axios from 'axios';
 import('../CSS/ChatApplication.css')
 
-function CreateChatRoomContent({onClose,displayChat, findChatNames,setChatNames, chatNames, selectedId, setSelectedId}) {
+function CreateChatRoomContent({onClose,chatObject, findChatObject,setchatObject, fecthChatRoomData, }) {
     const { setIsLoggedIn, isLoggedIn, currentUserID, currentUser } = useAuth();
     const [isLoading, setIsLoading] = useState(true); // Initially, data is loading
     const [friendList, setFriendList] =  useState([]);
     const [userId, setUserId] =  useState('');
     const [selectedPersonId, setSelectedPersonId] = useState(null);
     const [selectedPersonName, setSelectedPersonName] = useState(null);
-    
-    const [chatRooms, setChatRooms] =  useState([]);
 
     function selectPerson(id, name) {
         setSelectedPersonId(id);
@@ -48,13 +46,11 @@ function CreateChatRoomContent({onClose,displayChat, findChatNames,setChatNames,
           // Step 1: Fetch the list of friend IDs
           let response = await axios.post('/api/showFriendList', { userID: userID });
           const friendIDs = response.data.friends; // Assuming the endpoint returns an object with a 'friends' property that is an array of IDs
-          console.log(friendIDs)
           // Step 2: Fetch detailed information for each friend
           if (friendIDs && friendIDs.length > 0) {
             response = await axios.post('/api/friendsDetails', { friends: friendIDs });
             const friendDetails = response.data; // This should be the array of friend objects with detailed information
             setFriendList(friendDetails); // Update your state with the detailed friend information
-            console.log(friendDetails)
           } else {
             setFriendList([]); // Handle the case where there are no friends
           }
@@ -71,11 +67,8 @@ function CreateChatRoomContent({onClose,displayChat, findChatNames,setChatNames,
 
         try {
           const response = await axios.post('/api/createChatRoom', { user1, user2, name1, name2 });
-          // setChatRooms(currentRooms => [...currentRooms, response.data]);
-          // await displayChat();
-          window.location.reload();
-          console.log(chatNames)
-          console.log(chatRooms)
+          console.log(response.data)
+          window.location.reload() 
            onClose();
             console.log('Chat room created successfully:', response.data);
         
@@ -86,7 +79,8 @@ function CreateChatRoomContent({onClose,displayChat, findChatNames,setChatNames,
       };
       
       
-
+     
+      
 
 
 
@@ -96,7 +90,7 @@ function CreateChatRoomContent({onClose,displayChat, findChatNames,setChatNames,
                 try {
                   // Ensure both displayChat and showFriends are called as functions
                   // and awaited together using Promise.all
-                  await Promise.all([showFriends()]);
+                  await Promise.all([showFriends(),fecthChatRoomData(), findChatObject() ]);
                   setIsLoading(false); // Set loading to false after data fetching
                 } catch (error) {
                   console.error('Error loading data:', error);

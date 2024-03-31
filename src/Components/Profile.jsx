@@ -111,8 +111,11 @@ const Profile = () => {
             const trimmedPassword = password.trim();
             const response = await axios.post('/api/changePassword', { userId, newPassword: trimmedPassword });
             // Assuming you want to handle success, e.g., notifying the user
-            
+            setPassword(''); // Reset password input after successful change
             console.log('Password changed successfully');
+        
+            alert('Password changed successfully.'); // Consider providing user feedback
+          
         } catch (error) {
             console.error('Error setting password', error);
             
@@ -146,14 +149,20 @@ const Profile = () => {
     
 
       if (isLoading) {
-        return <div>Loading...</div>;
+        return( 
+        <>
+         <Navigation />
+        <h1>Loading...</h1></>)
     }
 
     return (
         <>
             <Navigation />
             <div className="profile-container">
-                <h1>Welcome {currentUser}</h1>
+            {
+  currentUser ? <h1>Welcome {currentUser}</h1> : <div>Loading...</div>
+}
+
                 <div className="section">
                     <h2>Edit Name</h2>
                     <form onSubmit={changeName}>

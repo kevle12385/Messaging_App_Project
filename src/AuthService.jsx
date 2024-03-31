@@ -17,7 +17,7 @@ export const refreshAccessToken = async () => {
       return null;
     }
     const response = await axios.post('/api/token', { Email: email }, { withCredentials: true });
-    document.cookie = `accessToken=${response.data.accessToken};path=/;secure;SameSite=Strict;max-age=${1 * 60}`; // 15 minutes expiration
+    document.cookie = `accessToken=${response.data.accessToken};path=/;secure;SameSite=Strict;max-age=${15 * 60}`; // 15 minutes expiration
     console.log('veryfying')
     return response.data.accessToken;
   } catch (error) {

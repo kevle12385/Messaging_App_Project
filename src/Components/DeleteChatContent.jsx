@@ -53,8 +53,10 @@ function DeleteChatContent({onClose ,chatObject, setchatObject, findChatObject, 
             setFeedback("Chat room deleted successfully");
             setSelectedId(null);
             // await displayChat();
+            
+
             onClose()
-          
+            window.location.reload() 
           } else {
             setFeedback("Failed to delete chat room.");
           }
@@ -79,7 +81,7 @@ function DeleteChatContent({onClose ,chatObject, setchatObject, findChatObject, 
                 try {
                   // Ensure both displayChat and showFriends are called as functions
                   // and awaited together using Promise.all
-                  await Promise.all([findChatObject()]);
+                  await Promise.all([fecthChatRoomData(), findChatObject()]);
                   setIsLoading(false); // Set loading to false after data fetching
                 } catch (error) {
                   console.error('Error loading data:', error);
@@ -89,7 +91,7 @@ function DeleteChatContent({onClose ,chatObject, setchatObject, findChatObject, 
           
               loadData();
             }
-          }, [isLoggedIn]); // Dependency array to control the effect's execution
+          }, [isLoggedIn, DeleteChat]); // Dependency array to control the effect's execution
           
       
 
@@ -106,17 +108,18 @@ function DeleteChatContent({onClose ,chatObject, setchatObject, findChatObject, 
           <div
             key={_id}
             onClick={() => handleSelect(_id)}
-            chatObject={`chatItem ${selectedId === _id ? 'chatItemSelected' : ''}`}
-          >
-            {name}
+            className={`friend1 ${selectedId === _id ? 'highlight' : ''}`}
+            
+         >
+            <span className="person-name">{name}</span>
           </div>
         ))
       )}
     </div>
 
-        <button onClick={DeleteChat} chatObject='button1'>Delete Chat</button>
+        <button onClick={DeleteChat} className='button1'>Delete Chat</button>
 
-        <button chatObject='button1' onClick={onClose}>Close</button>
+        <button className='button1' onClick={onClose}>Close</button>
     </>
   )
 }

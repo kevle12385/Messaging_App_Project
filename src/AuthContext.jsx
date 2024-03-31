@@ -84,7 +84,7 @@ export function AuthProvider({ children }) {
           const { accessToken , Email} = response.data;
       
           // Set accessToken in a cookie
-          document.cookie = `accessToken=${accessToken};path=/;secure;SameSite=Strict;max-age=${1 * 60}`; // 15 minutes expiration
+          document.cookie = `accessToken=${accessToken};path=/;secure;SameSite=Strict;max-age=${15 * 60}`; // 15 minutes expiration
           document.cookie = `Email=${Email};path=/;secure;SameSite=Strict;max-age=604800`; // 7 days expiration
 
           console.log(response.data.message); // "Login successful"
