@@ -12,9 +12,9 @@ function LandingPage() {
         <div className='HomeTitle'>Have a Friend Fiesta!</div>
         <div className='paragraph'>This is a great place to connect with friends.</div>
       </div>
-        <div className='bottomOfPage'>
+        {/* <div className='bottomOfPage'>
           <Link className='bottomLinks'to="/dashboard">About Us</Link>
-        </div>
+        </div> */}
       </div> 
   );
 }
