@@ -45,15 +45,18 @@ function Chatroom({selectedId, foundMessages}) {
       // Initialize or reuse the socket connection
       if (!socketRef.current) {
         console.log("Initializing new socket connection");
-        let socketServerURL = "https://nodejs-production-49b7.up.railway.app/";
-        socketRef.current = io(3001, {
+        // Use the server URL correctly in the io function
+        let socketServerURL = "wss://nodejs-production-49b7.up.railway.app:6464";
+        socketRef.current = io(socketServerURL, {
           transports: ["websocket", "polling"],
           query: { chatId: selectedId, userId: currentUserID },
         });
+        console.log('connected')
       } else {
         console.log("Reusing existing socket connection, updating query parameters");
         socketRef.current.io.opts.query = { chatId: selectedId, userId: currentUserID };
       }
+      
       
       
     
@@ -71,11 +74,11 @@ function Chatroom({selectedId, foundMessages}) {
       return () => {
         console.log("Cleaning up: removing event listener and disconnecting socket");
 
-          if (socketRef.current) {
-              socketRef.current.disconnect();
-              socketRef.current = null;
+          // if (socketRef.current) {
+          //     socketRef.current.disconnect();
+          //     socketRef.current = null;
               
-          }
+          // }
       };
   }, [currentUserID, selectedId, sendMessageClicked]); // Include selectedId in dependencies
   
@@ -103,6 +106,7 @@ function Chatroom({selectedId, foundMessages}) {
           };
   
           // Emitting the messageData object to the server
+          console.log('message send')
           socketRef.current.emit('send_message', messageData);
           setMessage("");
           setSendMessageClicked(true);
@@ -117,7 +121,7 @@ function Chatroom({selectedId, foundMessages}) {
   
     const displayChat = async () => {
       try {
-        const response = await axios.post('/api/findChatRoom', {userId: currentUserID, friendID: selectedId})
+        const response = await axios.post('/api/showChatRooms', {userId: currentUserID})
         setChatRoomFound(response.data)
         console.log(chatRoomFound);
       } catch (error) {
