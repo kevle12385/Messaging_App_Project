@@ -45,7 +45,10 @@ function Chatroom({selectedId, foundMessages}) {
       // Initialize or reuse the socket connection
       if (!socketRef.current) {
         console.log("Initializing new socket connection");
-        socketRef.current = io("http://localhost:3001", {
+        let socketServerURL;
+        socketServerURL = "wss://nodejs-production-49b7.up.railway.app";
+
+        socketRef.current = io(socketServerURL, {
           transports: ["websocket", "polling"],
           query: { chatId: selectedId, userId: currentUserID },
         });
